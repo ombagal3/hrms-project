@@ -25,7 +25,7 @@ const Home = () => {
                         <div class="card mt-5 bg-transparent border border-4 rounded-4" style={{ width: "18rem", borderColor: "white" }}>
                             <div class="card-body d-flex flex-column p-5">
                                 <h5 class="card-title text-center text-white fs-2">Admin</h5>
-                                <button className='btn btn-primary '>Go to</button>
+                                <button className='btn rounded-4'>Go To</button>
                             </div>
                         </div>
                     </div>
@@ -33,7 +33,7 @@ const Home = () => {
                         <div class="card mt-5 bg-transparent border border-4 rounded-4" style={{ width: "18rem", borderColor: "white" }}>
                             <div class="card-body d-flex flex-column p-5">
                                 <h5 class="card-title text-center text-white fs-2">Manager</h5>
-                                <button className='btn btn-primary '>Go to</button>
+                                <button className='btn rounded-4'>Go To</button>
                             </div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@ const Home = () => {
                         <div class="card mt-5 bg-transparent border border-4 rounded-4" style={{ width: "18rem", borderColor: "white" }}>
                             <div class="card-body d-flex flex-column p-5">
                                 <h5 class="card-title text-center text-white fs-2">Employee</h5>
-                                <button className='btn btn-primary '>Go to</button>
+                                <button className='btn rounded-4'>Go To</button>
                             </div>
                         </div>
                     </div>
