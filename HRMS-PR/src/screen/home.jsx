@@ -14,10 +14,10 @@ const Home = () => {
         <div className="bubble"></div>
       </div>
 
-      {/* Main Content Area */}
       <div className="content">
-        <h1>Welcome to Home Screen</h1>
-        <p>Aapka content yahan aayega.</p>
+        <h1>Welcome To Our Company</h1>
+        {/* <p>Aapka content yahan aayega.</p> */}
+        
       </div>
     </div>
   );
