@@ -23,7 +23,10 @@
   justify-content: center;
   align-items: center;
 }
-
+.btn{
+    background: transparent;
+    border:3px solid white;
+}
 /* Bubbles Styling */
 .bubble {
   position: absolute;
