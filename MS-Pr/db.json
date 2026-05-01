@@ -1,0 +1,100 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Admin",
+      "email": "admin@gmail.com",
+      "password": "1234",
+      "role": "admin"
+    },
+    {
+      "name": "Vishal",
+      "email": "mgrvishal@gmail.com",
+      "password": "1234",
+      "role": "manager",
+      "id": "iEJ8mQcxcz8"
+    },
+    {
+      "name": "Om Bagal",
+      "email": "empom@gmail.com",
+      "password": "1234",
+      "role": "employee",
+      "id": "U8eNP1xYkRg"
+    },
+    {
+      "name": "Darshan",
+      "email": "empdarshan@gmail.com",
+      "password": "1234",
+      "role": "employee",
+      "id": "66mwM3M7WKs"
+    }
+  ],
+  "leaves": [
+    {
+      "name": "Om Bagal",
+      "date": "2026-04-30",
+      "reason": "helth issue",
+      "status": "approved",
+      "id": "o916E0_NMXg"
+    },
+    {
+      "name": "Om Bagal",
+      "date": "2026-04-30",
+      "reason": "helth issue",
+      "status": "approved",
+      "id": "g6QOuGIPMEg"
+    },
+    {
+      "name": "Darshan",
+      "date": "2026-04-18",
+      "reason": "helth",
+      "status": "approved",
+      "id": "oD4-plFR06Q"
+    },
+    {
+      "name": "Om Bagal",
+      "date": "2026-04-03",
+      "reason": "metting",
+      "status": "rejected",
+      "id": "vo7BxhgWyiw"
+    },
+    {
+      "name": "Darshan",
+      "date": "2026-04-30",
+      "reason": "bikde",
+      "status": "approved",
+      "id": "bQWI_uuPzD0"
+    },
+    {
+      "name": "Darshan",
+      "date": "2026-04-25",
+      "reason": "work is hard i am from remote today",
+      "status": "pending",
+      "id": "umXaKFZRvF0"
+    }
+  ],
+  "attendance": [
+    {
+      "name": "Om Bagal",
+      "date": "4/30/2026",
+      "checkIn": "10:18:58 PM",
+      "checkOut": "10:19:08 PM",
+      "id": "35NKu14G0Ik"
+    },
+    {
+      "name": "Darshan",
+      "date": "4/30/2026",
+      "checkIn": "10:43:16 PM",
+      "checkOut": "10:43:32 PM",
+      "id": "hYoNInmXSFs"
+    },
+    {
+      "name": "Om Bagal",
+      "date": "5/1/2026",
+      "checkIn": "4:48:21 PM",
+      "checkOut": "4:48:23 PM",
+      "id": "mopJrg0r7lQ"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
