@@ -146,6 +146,23 @@
       "checkIn": "4:48:21 PM",
       "checkOut": "4:48:23 PM",
       "id": "mopJrg0r7lQ"
+    },
+    {
+      "userId": "66mwM3M7WKs",
+      "name": "Darshan",
+      "email": "empdarshan@gmail.com",
+      "date": "2026-05-03",
+      "checkIn": "6:32:06 PM",
+      "checkInAt": "2026-05-03T13:02:06.371Z",
+      "checkOut": "6:32:25 PM",
+      "checkOutAt": "2026-05-03T13:02:25.585Z",
+      "normalHours": 8,
+      "hourlySalary": 160,
+      "workedHours": 0.01,
+      "overtimeHours": 0,
+      "salaryAmount": 0.85,
+      "status": "completed",
+      "id": "Pw3vAtyNAZc"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
