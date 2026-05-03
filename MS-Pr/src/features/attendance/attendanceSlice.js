@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// ➕ Mark Attendance
 export const markAttendance = createAsyncThunk(
   "attendance/add",
   async (data) => {
@@ -9,7 +8,7 @@ export const markAttendance = createAsyncThunk(
     return res.data;
   }
 );
-// ✏️ UPDATE ATTENDANCE (checkout)
+
 export const updateAttendance = createAsyncThunk(
   "attendance/update",
   async (data) => {
@@ -21,7 +20,6 @@ export const updateAttendance = createAsyncThunk(
   }
 );
 
-// 🔽 Get Attendance
 export const fetchAttendance = createAsyncThunk(
   "attendance/fetch",
   async () => {
@@ -41,11 +39,11 @@ const attendanceSlice = createSlice({
       state.list.push(action.payload);
     });
     builder.addCase(updateAttendance.fulfilled, (state, action) => {
-  const index = state.list.findIndex(a => a.id === action.payload.id);
-  if (index !== -1) {
-    state.list[index] = action.payload;
-  }
-});
+      const index = state.list.findIndex((a) => a.id === action.payload.id);
+      if (index !== -1) {
+        state.list[index] = action.payload;
+      }
+    });
   }
 });
 

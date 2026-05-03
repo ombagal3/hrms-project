@@ -1,162 +1,101 @@
-// import { useDispatch } from "react-redux";
-// import { applyLeave } from "../features/leave/leaveSlice";
-// import { useState } from "react";
-// import {  markAttendance, updateAttendance  } from "../features/attendance/attendanceSlice";
-
-// import { fetchAttendance } from "../features/attendance/attendanceSlice";
-// import { useEffect } from "react";
-
-
-
-
-
-// export default function Employee() {
-//   const dispatch = useDispatch();
-
-//   const [date, setDate] = useState("");
-//   const [reason, setReason] = useState("");
-//   const [activeTab, setActiveTab] = useState("leave");
-
-// const user = JSON.parse(localStorage.getItem("user"));
-// const attendance = useSelector((state) => state.attendance.list);
-
-// if (!user) {
-//   return <h3>Please login again</h3>;
-// }
-
-  
-
-//   const handleApply = () => {
-//     dispatch(applyLeave({
-//       name: user.name,
-//       date,
-//       reason,
-//       status: "pending"
-//     }));
-//   };
-  
-
-// const handleCheckIn = () => {
-//   const today = new Date().toLocaleDateString();
-
-//   const already = attendance.find(
-//     (a) => a.name === user.name && a.date === today
-//   );
-
-//   if (already) {
-//     alert("Already checked in today");
-//     return;
-//   }
-
-//   dispatch(markAttendance({
-//     name: user.name,
-//     date: today,
-//     checkIn: new Date().toLocaleTimeString(),
-//     checkOut: ""
-//   }));
-// };
-  
-
-// const handleCheckOut = () => {
-//   const today = new Date().toLocaleDateString();
-
-//   const record = attendance.find(
-//     (a) => a.name === user.name && a.date === today && !a.checkOut
-//   );
-
-//   if (!record) {
-//     alert("No check-in found");
-//     return;
-//   }
-
-//   dispatch(updateAttendance({
-//     ...record,
-//     checkOut: new Date().toLocaleTimeString()
-//   }));
-// };
-
-//   return (
-
-//      <div className="container mt-3">
-//       <h2>Employee Dashboard</h2>
-
-//       {/* 🔥 TABS */}
-//       <div className="mb-3">
-//         <button
-//           className="btn btn-primary me-2"
-//           onClick={() => setActiveTab("leave")}
-//         >
-//           Leave
-//         </button>
-
-//         <button
-//           className="btn btn-secondary"
-//           onClick={() => setActiveTab("attendance")}
-//         >
-//           Attendance
-//         </button>
-//       </div>
-
-//       {/* 🔁 TAB CONTENT */}
-//       {activeTab === "leave" && (
-//         <div>
-//           <h4>Leave Section</h4>
-//          <input type="date" onChange={(e) => setDate(e.target.value)} />
-//       <input placeholder="Reason" onChange={(e) => setReason(e.target.value)} />
-
-//       <button onClick={handleApply}>Apply Leave</button>
-//         </div>
-//       )}
-
-//       {activeTab === "attendance" && (
-//         <div>
-//           <h4>Attendance Section</h4>
-//        <button onClick={()=> handleCheckIn()} className="btn btn-primary">CheckIn</button>
-//        <button onClick={()=> handleCheckOut()}  className="btn btn-secondary">CheckOut</button>
-        
-//         </div>
-        
-//       )}
-//     </div>
-  
-  
-//   );
-// }
-
-import { useDispatch, useSelector } from "react-redux"; // ✅ FIX
-import { applyLeave ,  fetchLeaves } from "../features/leave/leaveSlice";
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
+  fetchAttendance,
   markAttendance,
-  updateAttendance,
-  fetchAttendance
+  updateAttendance
 } from "../features/attendance/attendanceSlice";
+import { applyLeave, fetchLeaves } from "../features/leave/leaveSlice";
+import { fetchUsers } from "../features/users/userSlice";
 
+const normalHours = 8;
+
+const getToday = () => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const formatTime = (value) => {
+  if (!value) return "-";
+  return new Date(value).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
+};
+
+const roundMoney = (value) => Math.round(value * 100) / 100;
 
 export default function Employee() {
   const dispatch = useDispatch();
 
   const [date, setDate] = useState("");
   const [reason, setReason] = useState("");
-  const [activeTab, setActiveTab] = useState("leave");
+  const [activeTab, setActiveTab] = useState("attendance");
+  const [now, setNow] = useState(new Date());
 
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  // ✅ Redux se attendance data
+  const savedUser = JSON.parse(localStorage.getItem("user") || "null");
   const attendance = useSelector((state) => state.attendance.list);
+  const leaves = useSelector((state) => state.leave.list);
+  const users = useSelector((state) => state.users.list);
 
-  // ✅ data load
+  const user = useMemo(() => {
+    return (
+      users.find((item) => item.id === savedUser?.id) ||
+      users.find((item) => item.email === savedUser?.email) ||
+      savedUser
+    );
+  }, [savedUser, users]);
+
   useEffect(() => {
     dispatch(fetchAttendance());
-     dispatch(fetchLeaves());
+    dispatch(fetchLeaves());
+    dispatch(fetchUsers());
   }, [dispatch]);
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const today = getToday();
+
+  const myLeaves = useMemo(() => {
+    return leaves.filter((leave) => leave.name === user?.name);
+  }, [leaves, user?.name]);
+
+  const myAttendance = useMemo(() => {
+    return attendance.filter(
+      (item) =>
+        item.userId === user?.id ||
+        item.email === user?.email ||
+        item.name === user?.name
+    );
+  }, [attendance, user?.email, user?.id, user?.name]);
+
+  const todayAttendance = myAttendance.find((item) => item.date === today);
+  const activeAttendance = myAttendance.find(
+    (item) => item.date === today && !item.checkOutAt
+  );
 
   if (!user) {
     return <h3>Please login again</h3>;
   }
 
-  // 🔽 LEAVE
+  const hourlySalary = Number(user.hourlySalary || user.salary || 0);
+  const totalLeaves = myLeaves.length;
+  const pendingLeaves = myLeaves.filter((l) => l.status === "pending").length;
+  const approvedLeaves = myLeaves.filter((l) => l.status === "approved").length;
+
   const handleApply = () => {
+    if (!date || !reason.trim()) {
+      alert("Leave date and reason required");
+      return;
+    }
+
     dispatch(
       applyLeave({
         name: user.name,
@@ -165,173 +104,208 @@ export default function Employee() {
         status: "pending"
       })
     );
+    setDate("");
+    setReason("");
   };
 
-  // 🔽 CHECK-IN
-  const handleCheckIn = () => {
-    const today = new Date().toLocaleDateString();
-
-    const already = attendance.find(
-      (a) => a.name === user.name && a.date === today
-    );
-
-    if (already) {
-      alert("Already checked in today");
+  const handleAttendance = () => {
+    if (!hourlySalary) {
+      alert("Hourly salary admin panel me set karo");
       return;
     }
 
-    dispatch(
-      markAttendance({
-        name: user.name,
-        date: today,
-        checkIn: new Date().toLocaleTimeString(),
-        checkOut: ""
-      })
-    );
-  };
+    const currentTime = new Date();
 
-  // 🔽 CHECK-OUT
-  const handleCheckOut = () => {
-    const today = new Date().toLocaleDateString();
+    if (!activeAttendance) {
+      if (todayAttendance) {
+        alert("Today attendance already completed");
+        return;
+      }
 
-    const record = attendance.find(
-      (a) => a.name === user.name && a.date === today && !a.checkOut
-    );
-
-    if (!record) {
-      alert("No check-in found");
+      dispatch(
+        markAttendance({
+          userId: user.id,
+          name: user.name,
+          email: user.email,
+          date: today,
+          checkIn: currentTime.toLocaleTimeString(),
+          checkInAt: currentTime.toISOString(),
+          checkOut: "",
+          checkOutAt: "",
+          normalHours,
+          hourlySalary,
+          workedHours: 0,
+          overtimeHours: 0,
+          salaryAmount: 0,
+          status: "checked-in"
+        })
+      );
       return;
     }
+
+    const checkInTime = new Date(activeAttendance.checkInAt);
+    const workedHours = Math.max(
+      0,
+      (currentTime.getTime() - checkInTime.getTime()) / (1000 * 60 * 60)
+    );
+    const overtimeHours = Math.max(0, workedHours - normalHours);
+    const salaryAmount = roundMoney(workedHours * hourlySalary);
 
     dispatch(
       updateAttendance({
-        ...record,
-        checkOut: new Date().toLocaleTimeString()
+        ...activeAttendance,
+        checkOut: currentTime.toLocaleTimeString(),
+        checkOutAt: currentTime.toISOString(),
+        workedHours: roundMoney(workedHours),
+        overtimeHours: roundMoney(overtimeHours),
+        salaryAmount,
+        status: "completed"
       })
     );
-
-
-
   };
 
-
-  const leaves = useSelector((state) => state.leave.list);
-
-
-  const myLeaves = leaves.filter(l => l.name === user.name);
-
-const totalLeaves = myLeaves.length;
-const pendingLeaves = myLeaves.filter(l => l.status === "pending").length;
-const approvedLeaves = myLeaves.filter(l => l.status === "approved").length;
-
-const today = new Date().toISOString().split("T")[0];
-
-const todayAttendance = attendance.find(
-  (a) => a.name === user.name && a.date === today
-);
-
   return (
+    <main className="page-shell">
+      <section className="panel">
+        <div className="section-heading">
+          <div>
+            <h2>Employee Dashboard</h2>
+            <p>{user.name} salary and attendance</p>
+          </div>
+          <span className="clock">{now.toLocaleTimeString()}</span>
+        </div>
 
+        <div className="stat-grid">
+          <div className="stat-card">
+            <span>Hourly Salary</span>
+            <strong>Rs {hourlySalary || 0}</strong>
+          </div>
+          <div className="stat-card">
+            <span>Normal Hours</span>
+            <strong>{normalHours} hr</strong>
+          </div>
+          <div className="stat-card">
+            <span>Today Status</span>
+            <strong>
+              {activeAttendance
+                ? "Checked In"
+                : todayAttendance?.checkOutAt
+                ? "Completed"
+                : "Not Started"}
+            </strong>
+          </div>
+          <div className="stat-card">
+            <span>Today Salary</span>
+            <strong>Rs {todayAttendance?.salaryAmount || 0}</strong>
+          </div>
+        </div>
 
-
-    
-    <div className="container mt-3">
-      <h2>Employee Dashboard</h2>
-
-      {/* TABS */}
-      <div className="mb-3">
-        <button
-          className="btn btn-primary me-2"
-          onClick={() => setActiveTab("leave")}
-        >
-          Leave
-        </button>
-
-        <button
-          className="btn btn-secondary"
-          onClick={() => setActiveTab("attendance")}
-        >
-          Attendance
-        </button>
-      </div>
-
-      {/* LEAVE */}
-      {activeTab === "leave" && (
-        <div>
-          <h4>Leave Section</h4>
-
-          <input
-            type="date"
-            className="form-control mb-2"
-            onChange={(e) => setDate(e.target.value)}
-          />
-
-          <input
-            placeholder="Reason"
-            className="form-control mb-2"
-            onChange={(e) => setReason(e.target.value)}
-          />
-
-          <button className="btn btn-success" onClick={handleApply}>
-            Apply Leave
+        <div className="tabs">
+          <button
+            className={activeTab === "attendance" ? "active-tab" : ""}
+            onClick={() => setActiveTab("attendance")}
+          >
+            Attendance
+          </button>
+          <button
+            className={activeTab === "leave" ? "active-tab" : ""}
+            onClick={() => setActiveTab("leave")}
+          >
+            Leave
           </button>
         </div>
-      )}
 
-      {/* ATTENDANCE */}
-      {activeTab === "attendance" && (
-        <div>
-          <h4>Attendance Section</h4>
+        {activeTab === "attendance" && (
+          <div className="attendance-box">
+            <button className="attendance-btn" onClick={handleAttendance}>
+              {activeAttendance ? "Check Out" : "Check In"}
+            </button>
 
-          <button className="btn btn-primary me-2" onClick={()=>handleCheckIn()}>
-            Check In
-          </button>
+            <div className="attendance-details">
+              <div>
+                <span>Check In</span>
+                <strong>{formatTime(todayAttendance?.checkInAt)}</strong>
+              </div>
+              <div>
+                <span>Check Out</span>
+                <strong>{formatTime(todayAttendance?.checkOutAt)}</strong>
+              </div>
+              <div>
+                <span>Worked Hours</span>
+                <strong>{todayAttendance?.workedHours || 0} hr</strong>
+              </div>
+              <div>
+                <span>Overtime</span>
+                <strong>{todayAttendance?.overtimeHours || 0} hr</strong>
+              </div>
+            </div>
+          </div>
+        )}
 
-          <button className="btn btn-danger" onClick={()=>handleCheckOut()}>
-            Check Out
-          </button>
+        {activeTab === "leave" && (
+          <div className="leave-box">
+            <div className="employee-form two-column">
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
+              <input
+                placeholder="Reason"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+              />
+            </div>
+            <button className="primary-btn" onClick={handleApply}>
+              Apply Leave
+            </button>
+          </div>
+        )}
+      </section>
+
+      <section className="panel">
+        <div className="stat-grid">
+          <div className="stat-card">
+            <span>Total Leaves</span>
+            <strong>{totalLeaves}</strong>
+          </div>
+          <div className="stat-card">
+            <span>Pending</span>
+            <strong>{pendingLeaves}</strong>
+          </div>
+          <div className="stat-card">
+            <span>Approved</span>
+            <strong>{approvedLeaves}</strong>
+          </div>
         </div>
-      )}
 
-
-
-      <div className="row mb-4 mt-4">
-
-  <div className="col-md-3">
-    <div className="card p-3 shadow text-center">
-      <h6>Total Leaves</h6>
-      <h4>{totalLeaves}</h4>
-    </div>
-  </div>
-
-  <div className="col-md-3">
-    <div className="card p-3 shadow text-center bg-warning">
-      <h6>Pending</h6>
-      <h4>{pendingLeaves}</h4>
-    </div>
-  </div>
-
-  <div className="col-md-3">
-    <div className="card p-3 shadow text-center bg-success text-white">
-      <h6>Approved</h6>
-      <h4>{approvedLeaves}</h4>
-    </div>
-  </div>
-
-  <div className="col-md-3">
-    <div className="card p-3 shadow text-center bg-info text-white">
-      <h6>Today Attendance</h6>
-      <h5>
-        {todayAttendance
-          ? todayAttendance.checkOut
-            ? "Completed"
-            : "Checked In"
-          : "Absent"}
-      </h5>
-    </div>
-  </div>
-
-</div>
-    </div>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Check In</th>
+                <th>Check Out</th>
+                <th>Hours</th>
+                <th>Overtime</th>
+                <th>Salary</th>
+              </tr>
+            </thead>
+            <tbody>
+              {myAttendance.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.date}</td>
+                  <td>{formatTime(item.checkInAt)}</td>
+                  <td>{formatTime(item.checkOutAt)}</td>
+                  <td>{item.workedHours || 0}</td>
+                  <td>{item.overtimeHours || 0}</td>
+                  <td>Rs {item.salaryAmount || 0}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
   );
 }

@@ -18,10 +18,13 @@ export default function Login() {
 
   // ✅ yaha redirect hoga properly
   useEffect(() => {
-    if (user?.role === "admin") navigate("/admin");
-    else if (user?.role === "manager") navigate("/manager");
-    else if (user?.role === "employee") navigate("/employee");
+    if (!user) return;
+
     localStorage.setItem("user", JSON.stringify(user));
+
+    if (user.role === "admin") navigate("/admin");
+    else if (user.role === "manager") navigate("/manager");
+    else if (user.role === "employee") navigate("/employee");
   }, [user, navigate]);
 
   return (

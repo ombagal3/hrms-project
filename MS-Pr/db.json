@@ -5,28 +5,52 @@
       "name": "Admin",
       "email": "admin@gmail.com",
       "password": "1234",
-      "role": "admin"
+      "role": "admin",
+      "aadhaar": "000000000000",
+      "dob": "1990-01-01",
+      "field": "Admin",
+      "hourlySalary": 0,
+      "address": "Office",
+      "phone": "0000000000"
     },
     {
       "name": "Vishal",
       "email": "mgrvishal@gmail.com",
       "password": "1234",
       "role": "manager",
-      "id": "iEJ8mQcxcz8"
+      "id": "iEJ8mQcxcz8",
+      "aadhaar": "111122223333",
+      "dob": "1998-01-10",
+      "field": "Management",
+      "hourlySalary": 250,
+      "address": "Pune",
+      "phone": "9876543210"
     },
     {
       "name": "Om Bagal",
       "email": "empom@gmail.com",
       "password": "1234",
       "role": "employee",
-      "id": "U8eNP1xYkRg"
+      "id": "U8eNP1xYkRg",
+      "aadhaar": "222233334444",
+      "dob": "2000-05-15",
+      "field": "Development",
+      "hourlySalary": 180,
+      "address": "Mumbai",
+      "phone": "9876501234"
     },
     {
       "name": "Darshan",
       "email": "empdarshan@gmail.com",
       "password": "1234",
       "role": "employee",
-      "id": "66mwM3M7WKs"
+      "id": "66mwM3M7WKs",
+      "aadhaar": "333344445555",
+      "dob": "2001-08-20",
+      "field": "Support",
+      "hourlySalary": 160,
+      "address": "Nashik",
+      "phone": "9876512345"
     }
   ],
   "leaves": [
