@@ -9,6 +9,8 @@ import { applyLeave, fetchLeaves } from "../features/leave/leaveSlice";
 import { fetchUsers } from "../features/users/userSlice";
 
 const normalHours = 8;
+const monthlyWorkDays = 26;
+const monthlyWorkHours = normalHours * monthlyWorkDays;
 
 const getToday = () => {
   const date = new Date();
@@ -85,7 +87,8 @@ export default function Employee() {
     return <h3>Please login again</h3>;
   }
 
-  const hourlySalary = Number(user.hourlySalary || user.salary || 0);
+  const monthlySalary = Number(user.monthlySalary || user.salary || 0);
+  const hourlySalary = monthlySalary ? monthlySalary / monthlyWorkHours : 0;
   const totalLeaves = myLeaves.length;
   const pendingLeaves = myLeaves.filter((l) => l.status === "pending").length;
   const approvedLeaves = myLeaves.filter((l) => l.status === "approved").length;
@@ -109,8 +112,8 @@ export default function Employee() {
   };
 
   const handleAttendance = () => {
-    if (!hourlySalary) {
-      alert("Hourly salary admin panel me set karo");
+    if (!monthlySalary) {
+      alert("Monthly salary admin panel me set karo");
       return;
     }
 
@@ -133,6 +136,7 @@ export default function Employee() {
           checkOut: "",
           checkOutAt: "",
           normalHours,
+          monthlySalary,
           hourlySalary,
           workedHours: 0,
           overtimeHours: 0,
@@ -177,12 +181,16 @@ export default function Employee() {
 
         <div className="stat-grid">
           <div className="stat-card">
-            <span>Hourly Salary</span>
-            <strong>Rs {hourlySalary || 0}</strong>
+            <span>Monthly Salary</span>
+            <strong>Rs {monthlySalary || 0}</strong>
           </div>
           <div className="stat-card">
-            <span>Normal Hours</span>
-            <strong>{normalHours} hr</strong>
+            <span>Hourly Rate</span>
+            <strong>Rs {roundMoney(hourlySalary)}</strong>
+          </div>
+          <div className="stat-card">
+            <span>Month Hours</span>
+            <strong>{monthlyWorkHours} hr</strong>
           </div>
           <div className="stat-card">
             <span>Today Status</span>

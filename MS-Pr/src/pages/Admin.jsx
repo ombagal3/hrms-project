@@ -15,10 +15,13 @@ const emptyForm = {
   aadhaar: "",
   dob: "",
   field: "",
-  hourlySalary: "",
+  monthlySalary: "",
   address: "",
   phone: ""
 };
+
+const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 export default function Admin() {
   const dispatch = useDispatch();
@@ -61,7 +64,7 @@ export default function Admin() {
       "aadhaar",
       "dob",
       "field",
-      "hourlySalary",
+      "monthlySalary",
       "address",
       "phone"
     ];
@@ -69,6 +72,13 @@ export default function Admin() {
 
     if (isEmpty) {
       alert("All employee fields are required");
+      return;
+    }
+
+    if (!passwordRegex.test(form.password)) {
+      alert(
+        "Password me minimum 8 characters, 1 uppercase, 1 lowercase, 1 number aur 1 special character hona chahiye"
+      );
       return;
     }
 
@@ -94,7 +104,7 @@ export default function Admin() {
     const employeeData = {
       ...form,
       role,
-      hourlySalary: Number(form.hourlySalary),
+      monthlySalary: Number(form.monthlySalary),
       aadhaar: form.aadhaar.trim(),
       phone: form.phone.trim()
     };
@@ -118,7 +128,7 @@ export default function Admin() {
       aadhaar: user.aadhaar || "",
       dob: user.dob || "",
       field: user.field || "",
-      hourlySalary: user.hourlySalary || "",
+      monthlySalary: user.monthlySalary || user.salary || "",
       address: user.address || "",
       phone: user.phone || ""
     });
@@ -135,7 +145,7 @@ export default function Admin() {
         <div className="section-heading">
           <div>
             <h2>Admin Dashboard</h2>
-            <p>Employee information and hourly salary setup</p>
+            <p>Employee information and monthly salary setup</p>
           </div>
           <span className="count-pill">{users.length} users</span>
         </div>
@@ -153,7 +163,8 @@ export default function Admin() {
           />
           <input
             type="password"
-            placeholder="Password"
+            placeholder="Password: Aa@12345"
+            title="Minimum 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character"
             value={form.password}
             onChange={(e) => handleChange("password", e.target.value)}
           />
@@ -175,9 +186,9 @@ export default function Admin() {
           <input
             type="number"
             min="0"
-            placeholder="Salary per hour"
-            value={form.hourlySalary}
-            onChange={(e) => handleChange("hourlySalary", e.target.value)}
+            placeholder="Monthly Salary"
+            value={form.monthlySalary}
+            onChange={(e) => handleChange("monthlySalary", e.target.value)}
           />
           <input
             placeholder="Phone"
@@ -227,7 +238,7 @@ export default function Admin() {
                 <th>Name</th>
                 <th>Role</th>
                 <th>Field</th>
-                <th>Hourly Salary</th>
+                <th>Monthly Salary</th>
                 <th>Phone</th>
                 <th>Action</th>
               </tr>
@@ -241,7 +252,7 @@ export default function Admin() {
                   </td>
                   <td>{user.role}</td>
                   <td>{user.field || "-"}</td>
-                  <td>{user.hourlySalary ? `Rs ${user.hourlySalary}` : "-"}</td>
+                  <td>{user.monthlySalary ? `Rs ${user.monthlySalary}` : "-"}</td>
                   <td>{user.phone || "-"}</td>
                   <td>
                     <button className="small-btn" onClick={() => handleEdit(user)}>
