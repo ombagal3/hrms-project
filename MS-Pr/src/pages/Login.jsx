@@ -29,7 +29,7 @@ export default function Login() {
     <div className="login-page">
       <div className="login-card">
         <div className="login-brand">
-          <span>HR</span>
+          <span className="brand-logo">H</span>
           <div>
             <h2>HRMS Login</h2>
             <p>Admin, manager, or employee access</p>

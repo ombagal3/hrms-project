@@ -84,6 +84,22 @@ p {
   letter-spacing: 0;
 }
 
+.brand-logo {
+  position: relative;
+  overflow: hidden;
+}
+
+.brand-logo::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 10px;
+  height: 7px;
+  border-radius: 999px;
+  background: #9ec5fe;
+}
+
 .login-brand h2 {
   color: #111827;
   font-size: 26px;
