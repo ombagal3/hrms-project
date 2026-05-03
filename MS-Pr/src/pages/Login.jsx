@@ -27,6 +27,19 @@ export default function Login() {
 
   return (
     <div className="login-page">
+      <div className="bubble-layer" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
+
       <div className="login-card">
         <div className="login-brand">
           <span className="brand-logo">H</span>
