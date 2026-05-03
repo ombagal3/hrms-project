@@ -101,7 +101,12 @@ export default function Employee() {
 
     dispatch(
       applyLeave({
+        userId: user.id,
         name: user.name,
+        email: user.email,
+        field: user.field || "",
+        managerId: user.managerId || "",
+        managerName: user.managerName || "",
         date,
         reason,
         status: "pending"

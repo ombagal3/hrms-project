@@ -15,6 +15,7 @@ const emptyForm = {
   aadhaar: "",
   dob: "",
   field: "",
+  managerId: "",
   monthlySalary: "",
   address: "",
   phone: ""
@@ -51,6 +52,7 @@ export default function Admin() {
   );
 
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const managerOptions = users.filter((user) => user.role === "manager");
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -91,6 +93,16 @@ export default function Admin() {
       return;
     }
 
+    const role = getRoleFromEmail(form.email);
+    const selectedManager = managerOptions.find(
+      (manager) => manager.id === form.managerId
+    );
+
+    if (role === "employee" && !selectedManager) {
+      alert("Employee ke liye manager select karo");
+      return;
+    }
+
     const alreadyExists = users.find(
       (user) => user.email === form.email && user.id !== editId
     );
@@ -100,10 +112,11 @@ export default function Admin() {
       return;
     }
 
-    const role = getRoleFromEmail(form.email);
     const employeeData = {
       ...form,
       role,
+      managerId: role === "employee" ? selectedManager.id : "",
+      managerName: role === "employee" ? selectedManager.name : "",
       monthlySalary: Number(form.monthlySalary),
       aadhaar: form.aadhaar.trim(),
       phone: form.phone.trim()
@@ -128,6 +141,7 @@ export default function Admin() {
       aadhaar: user.aadhaar || "",
       dob: user.dob || "",
       field: user.field || "",
+      managerId: user.managerId || "",
       monthlySalary: user.monthlySalary || user.salary || "",
       address: user.address || "",
       phone: user.phone || ""
@@ -183,6 +197,17 @@ export default function Admin() {
             value={form.field}
             onChange={(e) => handleChange("field", e.target.value)}
           />
+          <select
+            value={form.managerId}
+            onChange={(e) => handleChange("managerId", e.target.value)}
+          >
+            <option value="">Select manager for employee</option>
+            {managerOptions.map((manager) => (
+              <option key={manager.id} value={manager.id}>
+                {manager.name} - {manager.field || "Team"}
+              </option>
+            ))}
+          </select>
           <input
             type="number"
             min="0"
@@ -238,6 +263,7 @@ export default function Admin() {
                 <th>Name</th>
                 <th>Role</th>
                 <th>Field</th>
+                <th>Manager</th>
                 <th>Monthly Salary</th>
                 <th>Phone</th>
                 <th>Action</th>
@@ -252,6 +278,7 @@ export default function Admin() {
                   </td>
                   <td>{user.role}</td>
                   <td>{user.field || "-"}</td>
+                  <td>{user.managerName || "-"}</td>
                   <td>{user.monthlySalary ? `Rs ${user.monthlySalary}` : "-"}</td>
                   <td>{user.phone || "-"}</td>
                   <td>

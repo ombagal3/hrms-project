@@ -1,5 +1,47 @@
 {
-  "users": [],
+  "users": [
+    {
+      "id": "1",
+      "name": "Admin",
+      "email": "admin@gmail.com",
+      "password": "Admin@123",
+      "role": "admin",
+      "aadhaar": "000000000000",
+      "dob": "1990-01-01",
+      "field": "Admin",
+      "monthlySalary": 0,
+      "address": "Office",
+      "phone": "0000000000"
+    },
+    {
+      "name": "Darshan Pawar",
+      "email": "mgrdarshan@gmail.com",
+      "password": "Darshan@2110",
+      "aadhaar": "270067000",
+      "dob": "2007-10-21",
+      "field": "FULL STACK DEV",
+      "monthlySalary": 300000,
+      "address": "BHESTAN CHAR RASTA NEAR RANCHOD RAY MANDIR JANKI PARK SOCIETY G82",
+      "phone": "7878033136",
+      "role": "manager",
+      "id": "2y9pzFzZZ9s"
+    },
+    {
+      "name": "Om Bhagl",
+      "email": "empom@gmail.com",
+      "password": "Om@12345",
+      "aadhaar": "567890874",
+      "dob": "2004-02-18",
+      "field": "Full Stack Dev",
+      "managerId": "2y9pzFzZZ9s",
+      "monthlySalary": 200000,
+      "address": "BHESTAN CHAR RASTA NEAR RANCHOD RAY MANDIR JANKI PARK SOCIETY G82",
+      "phone": "9737313944",
+      "role": "employee",
+      "managerName": "Darshan Pawar",
+      "id": "2tgPi7k5gCQ"
+    }
+  ],
   "leaves": [
     {
       "name": "Om Bagal",
@@ -110,6 +152,24 @@
       "salaryAmount": 0.85,
       "status": "completed",
       "id": "Pw3vAtyNAZc"
+    },
+    {
+      "userId": "2tgPi7k5gCQ",
+      "name": "Om Bhagl",
+      "email": "empom@gmail.com",
+      "date": "2026-05-03",
+      "checkIn": "10:17:43 PM",
+      "checkInAt": "2026-05-03T16:47:43.227Z",
+      "checkOut": "10:18:00 PM",
+      "checkOutAt": "2026-05-03T16:48:00.311Z",
+      "normalHours": 8,
+      "monthlySalary": 200000,
+      "hourlySalary": 961.5384615384615,
+      "workedHours": 0,
+      "overtimeHours": 0,
+      "salaryAmount": 4.56,
+      "status": "completed",
+      "id": "wuZ6WZKCFyE"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
