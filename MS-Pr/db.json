@@ -69,8 +69,15 @@
       "name": "Darshan",
       "date": "2026-04-25",
       "reason": "work is hard i am from remote today",
-      "status": "pending",
+      "status": "approved",
       "id": "umXaKFZRvF0"
+    },
+    {
+      "name": "Om Bagal",
+      "date": "2026-05-03",
+      "reason": "helth issue",
+      "status": "approved",
+      "id": "UXETnsFmzhw"
     }
   ],
   "attendance": [
@@ -94,6 +101,13 @@
       "checkIn": "4:48:21 PM",
       "checkOut": "4:48:23 PM",
       "id": "mopJrg0r7lQ"
+    },
+    {
+      "name": "Om Bagal",
+      "date": "5/3/2026",
+      "checkIn": "7:24:57 PM",
+      "checkOut": "7:41:18 PM",
+      "id": "WFTsgkwsmno"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
