@@ -1,17 +1,19 @@
 {
   "users": [
     {
-      "id": "1",
       "name": "Admin",
       "email": "admin@gmail.com",
       "password": "Admin@123",
-      "role": "admin",
       "aadhaar": "000000000000",
       "dob": "1990-01-01",
       "field": "Admin",
-      "monthlySalary": 0,
+      "managerId": "",
+      "monthlySalary": 120000,
       "address": "Office",
-      "phone": "0000000000"
+      "phone": "0000000000",
+      "role": "admin",
+      "managerName": "",
+      "id": "1"
     },
     {
       "name": "Darshan Pawar",
@@ -112,6 +114,18 @@
       "reason": "bike",
       "status": "approved",
       "id": "R4wC4csBkXY"
+    },
+    {
+      "userId": "2tgPi7k5gCQ",
+      "name": "Om Bhagl",
+      "email": "empom@gmail.com",
+      "field": "Full Stack Dev",
+      "managerId": "2y9pzFzZZ9s",
+      "managerName": "Darshan Pawar",
+      "date": "2026-05-23",
+      "reason": "bike ",
+      "status": "approved",
+      "id": "u0tjyTnDUBE"
     }
   ],
   "attendance": [

@@ -189,6 +189,25 @@ p {
   border-radius: 8px;
   background: #ffffff;
   box-shadow: 0 24px 60px rgba(30, 64, 175, 0.14);
+  animation: card-3d-in 0.7s ease-out both;
+  transform-style: preserve-3d;
+}
+
+@keyframes card-3d-in {
+  0% {
+    opacity: 0;
+    transform: perspective(900px) rotateX(10deg) rotateY(-8deg) translateY(22px) scale(0.96);
+  }
+
+  65% {
+    opacity: 1;
+    transform: perspective(900px) rotateX(-2deg) rotateY(2deg) translateY(-4px) scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    transform: perspective(900px) rotateX(0) rotateY(0) translateY(0) scale(1);
+  }
 }
 
 .login-brand {
@@ -259,6 +278,57 @@ p {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.password-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.password-input-wrap input {
+  padding-right: 48px;
+}
+
+.employee-form .password-input-wrap {
+  min-width: 0;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  width: 32px;
+  min-height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 6px;
+  color: #475569;
+  background: transparent;
+  box-shadow: none;
+  transform: translateY(-50%);
+}
+
+.password-toggle:hover {
+  color: #0d6efd;
+  background: #eef5ff;
+  transform: translateY(-50%) perspective(120px) translateZ(8px);
+}
+
+.password-toggle:active {
+  transform: translateY(-50%) perspective(120px) translateZ(2px) scale(0.95);
+}
+
+.password-toggle:focus-visible {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
+}
+
+.password-eye-icon {
+  width: 18px;
+  height: 18px;
+}
+
 .login-card input:focus,
 .employee-form input:focus,
 .employee-form select:focus,
@@ -288,6 +358,21 @@ p {
   box-shadow: 0 10px 22px rgba(13, 110, 253, 0.22);
 }
 
+.login-card .password-toggle {
+  width: 32px;
+  min-height: 32px;
+  padding: 0;
+  margin-top: 0;
+  color: #475569;
+  background: transparent;
+  box-shadow: none;
+}
+
+.login-card .password-toggle:hover {
+  color: #0d6efd;
+  background: #eef5ff;
+}
+
 .error-text {
   color: #dc3545;
   font-weight: 700;
@@ -304,6 +389,56 @@ p {
 .page-shell {
   display: grid;
   gap: 20px;
+}
+
+.page-shell,
+.manager-shell {
+  animation: dashboard-3d-in 0.75s ease-out both;
+  transform-origin: top center;
+  transform-style: preserve-3d;
+}
+
+.page-shell > *,
+.manager-shell > * {
+  animation: panel-float-in 0.65s ease-out both;
+}
+
+.page-shell > *:nth-child(2),
+.manager-shell > *:nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+.manager-shell > *:nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+@keyframes dashboard-3d-in {
+  0% {
+    opacity: 0;
+    transform: perspective(1000px) rotateX(9deg) translateY(26px) scale(0.97);
+  }
+
+  65% {
+    opacity: 1;
+    transform: perspective(1000px) rotateX(-2deg) translateY(-4px) scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    transform: perspective(1000px) rotateX(0) translateY(0) scale(1);
+  }
+}
+
+@keyframes panel-float-in {
+  0% {
+    opacity: 0;
+    transform: perspective(800px) rotateY(-4deg) translateY(18px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: perspective(800px) rotateY(0) translateY(0);
+  }
 }
 
 .panel,

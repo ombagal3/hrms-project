@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import PasswordInput from "../components/PasswordInput";
 import { loginUser } from "../features/auth/authSlice";
 
 export default function Login() {
@@ -57,9 +58,8 @@ export default function Login() {
         />
 
         <label>Password</label>
-        <input
+        <PasswordInput
           placeholder="Password"
-          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
