@@ -1,39 +1,60 @@
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../features/auth/authSlice";
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../features/auth/authSlice";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { user, error } = useSelector((state) => state.auth);
 
   const handleLogin = () => {
     dispatch(loginUser({ email, password }));
   };
 
-  // ✅ yaha redirect hoga properly
   useEffect(() => {
-    if (user?.role === "admin") navigate("/admin");
-    else if (user?.role === "manager") navigate("/manager");
-    else if (user?.role === "employee") navigate("/employee");
+    if (!user) return;
+
     localStorage.setItem("user", JSON.stringify(user));
+
+    if (user.role === "admin") navigate("/admin");
+    else if (user.role === "manager") navigate("/manager");
+    else if (user.role === "employee") navigate("/employee");
   }, [user, navigate]);
 
   return (
-    <div>
-      <h2>Login</h2>
+    <div className="login-page">
+      <div className="login-card">
+        <div className="login-brand">
+          <span className="brand-logo">H</span>
+          <div>
+            <h2>HRMS Login</h2>
+            <p>Admin, manager, or employee access</p>
+          </div>
+        </div>
 
-      <input placeholder="email...(emp,mgr)" onChange={(e) => setEmail(e.target.value)} />
-      <input placeholder="password" type="password" onChange={(e) => setPassword(e.target.value)} />
+        <label>Email</label>
+        <input
+          placeholder="admin@gmail.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-      <button onClick={handleLogin}>Login</button>
+        <label>Password</label>
+        <input
+          placeholder="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      {error && <p>{error}</p>}
+        <button onClick={handleLogin}>Login</button>
+
+        {error && <p className="error-text">{error}</p>}
+      </div>
     </div>
   );
 }

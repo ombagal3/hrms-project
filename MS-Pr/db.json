@@ -4,29 +4,42 @@
       "id": "1",
       "name": "Admin",
       "email": "admin@gmail.com",
-      "password": "1234",
-      "role": "admin"
+      "password": "Admin@123",
+      "role": "admin",
+      "aadhaar": "000000000000",
+      "dob": "1990-01-01",
+      "field": "Admin",
+      "monthlySalary": 0,
+      "address": "Office",
+      "phone": "0000000000"
     },
     {
-      "name": "Vishal",
-      "email": "mgrvishal@gmail.com",
-      "password": "1234",
+      "name": "Darshan Pawar",
+      "email": "mgrdarshan@gmail.com",
+      "password": "Darshan@2110",
+      "aadhaar": "270067000",
+      "dob": "2007-10-21",
+      "field": "FULL STACK DEV",
+      "monthlySalary": 300000,
+      "address": "BHESTAN CHAR RASTA NEAR RANCHOD RAY MANDIR JANKI PARK SOCIETY G82",
+      "phone": "7878033136",
       "role": "manager",
-      "id": "iEJ8mQcxcz8"
+      "id": "2y9pzFzZZ9s"
     },
     {
-      "name": "Om Bagal",
+      "name": "Om Bhagl",
       "email": "empom@gmail.com",
-      "password": "1234",
+      "password": "Om@12345",
+      "aadhaar": "567890874",
+      "dob": "2004-02-18",
+      "field": "Full Stack Dev",
+      "managerId": "2y9pzFzZZ9s",
+      "monthlySalary": 200000,
+      "address": "BHESTAN CHAR RASTA NEAR RANCHOD RAY MANDIR JANKI PARK SOCIETY G82",
+      "phone": "9737313944",
       "role": "employee",
-      "id": "U8eNP1xYkRg"
-    },
-    {
-      "name": "Darshan",
-      "email": "empdarshan@gmail.com",
-      "password": "1234",
-      "role": "employee",
-      "id": "66mwM3M7WKs"
+      "managerName": "Darshan Pawar",
+      "id": "2tgPi7k5gCQ"
     }
   ],
   "leaves": [
@@ -71,13 +84,6 @@
       "reason": "work is hard i am from remote today",
       "status": "approved",
       "id": "umXaKFZRvF0"
-    },
-    {
-      "name": "Om Bagal",
-      "date": "2026-05-03",
-      "reason": "helth issue",
-      "status": "approved",
-      "id": "UXETnsFmzhw"
     }
   ],
   "attendance": [
@@ -103,11 +109,39 @@
       "id": "mopJrg0r7lQ"
     },
     {
-      "name": "Om Bagal",
-      "date": "5/3/2026",
-      "checkIn": "7:24:57 PM",
-      "checkOut": "7:41:18 PM",
-      "id": "WFTsgkwsmno"
+      "userId": null,
+      "name": "Darshan",
+      "email": "empdarshan@gmail.com",
+      "date": "2026-05-03",
+      "checkIn": "6:32:06 PM",
+      "checkInAt": "2026-05-03T13:02:06.371Z",
+      "checkOut": "6:32:25 PM",
+      "checkOutAt": "2026-05-03T13:02:25.585Z",
+      "normalHours": 8,
+      "hourlySalary": 160,
+      "workedHours": 0.01,
+      "overtimeHours": 0,
+      "salaryAmount": 0.85,
+      "status": "completed",
+      "id": "Pw3vAtyNAZc"
+    },
+    {
+      "userId": "2tgPi7k5gCQ",
+      "name": "Om Bhagl",
+      "email": "empom@gmail.com",
+      "date": "2026-05-03",
+      "checkIn": "10:17:43 PM",
+      "checkInAt": "2026-05-03T16:47:43.227Z",
+      "checkOut": "10:18:00 PM",
+      "checkOutAt": "2026-05-03T16:48:00.311Z",
+      "normalHours": 8,
+      "monthlySalary": 200000,
+      "hourlySalary": 961.5384615384615,
+      "workedHours": 0,
+      "overtimeHours": 0,
+      "salaryAmount": 4.56,
+      "status": "completed",
+      "id": "wuZ6WZKCFyE"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

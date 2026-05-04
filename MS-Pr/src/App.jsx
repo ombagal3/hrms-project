@@ -4,7 +4,6 @@ import Admin from "./pages/Admin";
 import Manager from "./pages/Manager";
 import Employee from "./pages/Employee";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Layout from "./components/Layout";
 
 function App() {
   return (
@@ -38,18 +37,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-
-        <Route
-  path="/admin"
-  element={
-    <ProtectedRoute role="admin">
-      <Layout>
-        <Admin />
-      </Layout>
-    </ProtectedRoute>
-  }
-/>
       </Routes>
     </BrowserRouter>
   );

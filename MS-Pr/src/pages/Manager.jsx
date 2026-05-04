@@ -1,162 +1,214 @@
-// import { useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { fetchLeaves, updateLeave } from "../features/leave/leaveSlice";
-
-// export default function Manager() {
-//   const dispatch = useDispatch();
-//   const leaves = useSelector((state) => state.leave.list);
-
-//   useEffect(() => {
-//     dispatch(fetchLeaves());
-//   }, [dispatch]);
-
-//   return (
-//     <div>
-//       <h2>Manager Panel</h2>
-
-//       {leaves.map((leave) => (
-//         <div key={leave.id}>
-//           <p>{leave.name} - {leave.date} - {leave.reason} ({leave.status})</p>
-
-//           <button onClick={() =>
-//             dispatch(updateLeave({ ...leave, status: "approved" }))
-//           }>
-//             Approve
-//           </button>
-
-//           <button onClick={() =>
-//             dispatch(updateLeave({ ...leave, status: "rejected" }))
-//           }>
-//             Reject
-//           </button>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLeaves, updateLeave } from "../features/leave/leaveSlice";
+import { fetchUsers } from "../features/users/userSlice";
+
+const getInitials = (name = "") => {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+};
+
+const getStatusClass = (status) => {
+  if (status === "approved") return "status-badge approved";
+  if (status === "rejected") return "status-badge rejected";
+  return "status-badge pending";
+};
 
 export default function Manager() {
   const dispatch = useDispatch();
   const leaves = useSelector((state) => state.leave.list);
+  const users = useSelector((state) => state.users.list);
+  const manager = JSON.parse(localStorage.getItem("user") || "null");
 
   useEffect(() => {
     dispatch(fetchLeaves());
+    dispatch(fetchUsers());
   }, [dispatch]);
 
-  // 📊 Stats
-  const total = leaves.length;
-  const pending = leaves.filter(l => l.status === "pending").length;
-  const approved = leaves.filter(l => l.status === "approved").length;
-  const rejected = leaves.filter(l => l.status === "rejected").length;
+  const teamEmployees = useMemo(() => {
+    return users.filter((user) => user.managerId === manager?.id);
+  }, [manager?.id, users]);
+
+  const teamEmployeeIds = useMemo(
+    () => teamEmployees.map((employee) => employee.id),
+    [teamEmployees]
+  );
+
+  const teamEmployeeEmails = useMemo(
+    () => teamEmployees.map((employee) => employee.email),
+    [teamEmployees]
+  );
+
+  const teamLeaves = useMemo(() => {
+    return leaves.filter(
+      (leave) =>
+        leave.managerId === manager?.id ||
+        teamEmployeeIds.includes(leave.userId) ||
+        teamEmployeeEmails.includes(leave.email)
+    );
+  }, [leaves, manager?.id, teamEmployeeEmails, teamEmployeeIds]);
+
+  const pendingLeaves = teamLeaves.filter((leave) => leave.status === "pending");
+  const approvedLeaves = teamLeaves.filter((leave) => leave.status === "approved");
+  const rejectedLeaves = teamLeaves.filter((leave) => leave.status === "rejected");
 
   const handleUpdate = (leave, status) => {
     dispatch(updateLeave({ ...leave, status }));
   };
 
   return (
-    <div className="container mt-4">
-
-      <h2 className="mb-3">Manager Dashboard</h2>
-
-      {/* 🔥 CARDS */}
-      <div className="row mb-4">
-
-        <div className="col-md-3">
-          <div className="card p-3 shadow text-center">
-            <h6>Total Requests</h6>
-            <h4>{total}</h4>
+    <main className="manager-shell">
+      <section className="manager-hero">
+        <div>
+          <span className="eyebrow">Manager Workspace</span>
+          <h2>{manager?.field || "Team"} Dashboard</h2>
+          <p>
+            {manager?.name || "Manager"} can review leave requests and monitor
+            assigned team members from one place.
+          </p>
+        </div>
+        <div className="manager-profile">
+          <span>{getInitials(manager?.name || "MG")}</span>
+          <div>
+            <strong>{manager?.name || "Manager"}</strong>
+            <small>{manager?.email || "manager account"}</small>
           </div>
         </div>
+      </section>
 
-        <div className="col-md-3">
-          <div className="card p-3 shadow text-center bg-warning">
-            <h6>Pending</h6>
-            <h4>{pending}</h4>
-          </div>
+      <section className="manager-stats">
+        <div className="manager-stat-card primary">
+          <span>Team Members</span>
+          <strong>{teamEmployees.length}</strong>
+          <small>Assigned by admin</small>
         </div>
-
-        <div className="col-md-3">
-          <div className="card p-3 shadow text-center bg-success text-white">
-            <h6>Approved</h6>
-            <h4>{approved}</h4>
-          </div>
+        <div className="manager-stat-card warning">
+          <span>Pending Requests</span>
+          <strong>{pendingLeaves.length}</strong>
+          <small>Need approval</small>
         </div>
-
-        <div className="col-md-3">
-          <div className="card p-3 shadow text-center bg-danger text-white">
-            <h6>Rejected</h6>
-            <h4>{rejected}</h4>
-          </div>
+        <div className="manager-stat-card success">
+          <span>Approved</span>
+          <strong>{approvedLeaves.length}</strong>
+          <small>Completed requests</small>
         </div>
+        <div className="manager-stat-card danger">
+          <span>Rejected</span>
+          <strong>{rejectedLeaves.length}</strong>
+          <small>Declined requests</small>
+        </div>
+      </section>
 
-      </div>
+      <section className="manager-grid">
+        <div className="manager-panel">
+          <div className="manager-panel-head">
+            <div>
+              <h3>Team Members</h3>
+              <p>Employees reporting to this manager</p>
+            </div>
+            <span>{teamEmployees.length}</span>
+          </div>
 
-      {/* 📋 TABLE */}
-      <div className="card p-3 shadow">
-        <h5>Leave Requests</h5>
-
-        <table className="table table-bordered mt-3">
-          <thead className="table-dark">
-            <tr>
-              <th>Name</th>
-              <th>Date</th>
-              <th>Reason</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {leaves.map((leave) => (
-              <tr key={leave.id}>
-                <td>{leave.name}</td>
-                <td>{leave.date}</td>
-                <td>{leave.reason}</td>
-
-                <td>
-                  <span
-                    className={
-                      leave.status === "approved"
-                        ? "badge bg-success"
-                        : leave.status === "rejected"
-                        ? "badge bg-danger"
-                        : "badge bg-warning"
-                    }
-                  >
-                    {leave.status}
-                  </span>
-                </td>
-
-                <td>
-                  {leave.status === "pending" ? (
-                    <>
-                      <button
-                        className="btn btn-success btn-sm me-2"
-                        onClick={() => handleUpdate(leave, "approved")}
-                      >
-                        Approve
-                      </button>
-
-                      <button
-                        className="btn btn-danger btn-sm"
-                        onClick={() => handleUpdate(leave, "rejected")}
-                      >
-                        Reject
-                      </button>
-                    </>
-                  ) : (
-                    <span className="text-muted">No Action</span>
-                  )}
-                </td>
-              </tr>
+          <div className="member-list">
+            {teamEmployees.map((employee) => (
+              <div className="member-card" key={employee.id}>
+                <span className="avatar">{getInitials(employee.name)}</span>
+                <div>
+                  <strong>{employee.name}</strong>
+                  <small>{employee.field || "Team member"}</small>
+                </div>
+                <p>Rs {employee.monthlySalary || 0}</p>
+              </div>
             ))}
-          </tbody>
 
-        </table>
-      </div>
-    </div>
+            {teamEmployees.length === 0 && (
+              <div className="empty-state">
+                <strong>No team assigned</strong>
+                <p>Admin se employee assign karne ke baad yaha list dikhegi.</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="manager-panel wide">
+          <div className="manager-panel-head">
+            <div>
+              <h3>Leave Requests</h3>
+              <p>Approve or reject only your team requests</p>
+            </div>
+            <span>{teamLeaves.length}</span>
+          </div>
+
+          <div className="manager-table-wrap">
+            <table className="manager-table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Team</th>
+                  <th>Date</th>
+                  <th>Reason</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {teamLeaves.map((leave) => (
+                  <tr key={leave.id}>
+                    <td>
+                      <strong>{leave.name}</strong>
+                      <span>{leave.email || leave.managerName || "-"}</span>
+                    </td>
+                    <td>{leave.field || "-"}</td>
+                    <td>{leave.date || "-"}</td>
+                    <td>{leave.reason || "-"}</td>
+                    <td>
+                      <span className={getStatusClass(leave.status)}>
+                        {leave.status}
+                      </span>
+                    </td>
+                    <td>
+                      {leave.status === "pending" ? (
+                        <div className="approval-actions">
+                          <button
+                            className="approve-btn"
+                            onClick={() => handleUpdate(leave, "approved")}
+                          >
+                            Approve
+                          </button>
+                          <button
+                            className="reject-btn"
+                            onClick={() => handleUpdate(leave, "rejected")}
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      ) : (
+                        <span className="muted-action">Done</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+
+                {teamLeaves.length === 0 && (
+                  <tr>
+                    <td colSpan="6">
+                      <div className="empty-state table-empty">
+                        <strong>No leave requests</strong>
+                        <p>Team employee leave apply karega to yaha request aayegi.</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
