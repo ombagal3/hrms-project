@@ -42,11 +42,24 @@
       "role": "employee",
       "managerName": "Darshan Pawar",
       "id": "2tgPi7k5gCQ"
+    },
+    {
+      "name": "Vishal More",
+      "email": "mgrvishal@gmail.com",
+      "password": "Vishal@123",
+      "aadhaar": "1234567899876",
+      "dob": "2001-04-27",
+      "field": "Designer",
+      "managerId": "",
+      "monthlySalary": 36000,
+      "address": "BHESTAN CHAR RASTA NEAR RANCHOD RAY MANDIR JANKI PARK SOCIETY G82",
+      "phone": "9879982100",
+      "role": "manager",
+      "managerName": "",
+      "id": "d2IJ1XkC_jM"
     }
   ],
-  "leaves": [
-   
-  ],
+  "leaves": [],
   "attendance": [
     {
       "userId": null,
