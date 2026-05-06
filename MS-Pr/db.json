@@ -95,6 +95,24 @@
       "salaryAmount": 4.56,
       "status": "completed",
       "id": "wuZ6WZKCFyE"
+    },
+    {
+      "userId": "2tgPi7k5gCQ",
+      "name": "Om Bhagl",
+      "email": "empom@gmail.com",
+      "date": "2026-05-06",
+      "checkIn": "11:26:16 AM",
+      "checkInAt": "2026-05-06T05:56:16.562Z",
+      "checkOut": "11:26:30 AM",
+      "checkOutAt": "2026-05-06T05:56:30.785Z",
+      "normalHours": 8,
+      "monthlySalary": 200000,
+      "hourlySalary": 961.5384615384615,
+      "workedHours": 0,
+      "overtimeHours": 0,
+      "salaryAmount": 3.8,
+      "status": "completed",
+      "id": "herGErRV5yA"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
