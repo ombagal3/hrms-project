@@ -1,7 +1,22 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAttendance,
+  markAttendance,
+  updateAttendance
+} from "../features/attendance/attendanceSlice";
 import { fetchLeaves, updateLeave } from "../features/leave/leaveSlice";
 import { fetchUsers } from "../features/users/userSlice";
+import {
+  buildSundayAttendance,
+  calculateCheckoutPayroll,
+  formatTime,
+  getLocalDateKey,
+  getPaidSundaysUntilToday,
+  getPayrollRates,
+  normalHours,
+  roundMoney
+} from "../utils/payroll";
 
 const getInitials = (name = "") => {
   return name
@@ -23,16 +38,36 @@ export default function Manager() {
   const dispatch = useDispatch();
   const leaves = useSelector((state) => state.leave.list);
   const users = useSelector((state) => state.users.list);
-  const manager = JSON.parse(localStorage.getItem("user") || "null");
+  const attendance = useSelector((state) => state.attendance.list);
+  const manager = useMemo(
+    () => JSON.parse(localStorage.getItem("user") || "null"),
+    []
+  );
+  const [now, setNow] = useState(new Date());
 
   useEffect(() => {
     dispatch(fetchLeaves());
     dispatch(fetchUsers());
+    dispatch(fetchAttendance());
   }, [dispatch]);
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const teamEmployees = useMemo(() => {
     return users.filter((user) => user.managerId === manager?.id);
   }, [manager?.id, users]);
+
+  const managerAttendance = useMemo(() => {
+    return attendance.filter(
+      (item) =>
+        item.userId === manager?.id ||
+        item.email === manager?.email ||
+        item.name === manager?.name
+    );
+  }, [attendance, manager?.email, manager?.id, manager?.name]);
 
   const teamEmployeeIds = useMemo(
     () => teamEmployees.map((employee) => employee.id),
@@ -56,9 +91,91 @@ export default function Manager() {
   const pendingLeaves = teamLeaves.filter((leave) => leave.status === "pending");
   const approvedLeaves = teamLeaves.filter((leave) => leave.status === "approved");
   const rejectedLeaves = teamLeaves.filter((leave) => leave.status === "rejected");
+  const today = getLocalDateKey();
+  const todayAttendance = managerAttendance.find((item) => item.date === today);
+  const activeAttendance = managerAttendance.find(
+    (item) => item.date === today && item.status === "checked-in"
+  );
+  const monthlySalary = Number(manager?.monthlySalary || manager?.salary || 0);
+  const { dailySalary, hourlySalary } = getPayrollRates(monthlySalary);
+
+  useEffect(() => {
+    if (!manager?.id || !monthlySalary) return;
+
+    getPaidSundaysUntilToday().forEach((sunday) => {
+      const alreadyAdded = managerAttendance.some((item) => item.date === sunday);
+      if (!alreadyAdded) {
+        dispatch(
+          markAttendance(
+            buildSundayAttendance({
+              user: manager,
+              date: sunday,
+              monthlySalary
+            })
+          )
+        );
+      }
+    });
+  }, [dispatch, manager, managerAttendance, monthlySalary]);
 
   const handleUpdate = (leave, status) => {
     dispatch(updateLeave({ ...leave, status }));
+  };
+
+  const handleManagerAttendance = () => {
+    if (!monthlySalary) {
+      alert("Monthly salary admin panel me set karo");
+      return;
+    }
+
+    const currentTime = new Date();
+
+    if (!activeAttendance) {
+      if (todayAttendance) {
+        alert("Today attendance already completed");
+        return;
+      }
+
+      dispatch(
+        markAttendance({
+          userId: manager.id,
+          name: manager.name,
+          email: manager.email,
+          date: today,
+          checkIn: currentTime.toLocaleTimeString(),
+          checkInAt: currentTime.toISOString(),
+          checkOut: "",
+          checkOutAt: "",
+          normalHours,
+          monthlySalary,
+          hourlySalary,
+          workedHours: 0,
+          overtimeHours: 0,
+          salaryAmount: 0,
+          status: "checked-in"
+        })
+      );
+      return;
+    }
+
+    const payroll = calculateCheckoutPayroll({
+      checkInAt: activeAttendance.checkInAt,
+      checkOutAt: currentTime.toISOString(),
+      monthlySalary
+    });
+
+    dispatch(
+      updateAttendance({
+        ...activeAttendance,
+        checkOut: currentTime.toLocaleTimeString(),
+        checkOutAt: currentTime.toISOString(),
+        workedHours: payroll.workedHours,
+        overtimeHours: payroll.overtimeHours,
+        salaryAmount: payroll.salaryAmount,
+        dayType: payroll.dayType,
+        status: "completed"
+      })
+    );
   };
 
   return (
@@ -77,6 +194,32 @@ export default function Manager() {
           <div>
             <strong>{manager?.name || "Manager"}</strong>
             <small>{manager?.email || "manager account"}</small>
+          </div>
+        </div>
+      </section>
+
+      <section className="manager-attendance-panel">
+        <div>
+          <span className="eyebrow">Manager Attendance</span>
+          <h3>
+            {activeAttendance
+              ? "Checked In"
+              : todayAttendance?.status === "paid-sunday"
+              ? "Paid Sunday"
+              : todayAttendance
+              ? "Completed"
+              : "Ready for check in"}
+          </h3>
+          <p>{now.toLocaleTimeString()} | Daily salary Rs {roundMoney(dailySalary)}</p>
+        </div>
+        <div className="manager-attendance-actions">
+          <button className="attendance-btn" onClick={handleManagerAttendance}>
+            {activeAttendance ? "Check Out" : "Check In"}
+          </button>
+          <div>
+            <span>In: {todayAttendance?.dayType === "paid-sunday" ? "Sunday Paid" : formatTime(todayAttendance?.checkInAt)}</span>
+            <span>Out: {todayAttendance?.dayType === "paid-sunday" ? "Sunday Paid" : formatTime(todayAttendance?.checkOutAt)}</span>
+            <strong>Rs {todayAttendance?.salaryAmount || 0}</strong>
           </div>
         </div>
       </section>
