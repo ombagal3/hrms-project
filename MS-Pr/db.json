@@ -1,17 +1,19 @@
 {
   "users": [
     {
-      "id": "1",
       "name": "Admin",
       "email": "admin@gmail.com",
       "password": "Admin@123",
-      "role": "admin",
       "aadhaar": "000000000000",
       "dob": "1990-01-01",
       "field": "Admin",
-      "monthlySalary": 0,
+      "managerId": "",
+      "monthlySalary": 120000,
       "address": "Office",
-      "phone": "0000000000"
+      "phone": "9737313944",
+      "role": "admin",
+      "managerName": "",
+      "id": "1"
     },
     {
       "name": "Darshan Pawar",
@@ -84,6 +86,34 @@
       "reason": "work is hard i am from remote today",
       "status": "approved",
       "id": "umXaKFZRvF0"
+    },
+    {
+      "name": "Darshan",
+      "date": "2025-02-07",
+      "reason": "bike a",
+      "status": "approved",
+      "id": "DurZBfTZ56A"
+    },
+    {
+      "name": "Darshan",
+      "date": "2025-02-07",
+      "reason": "bike a",
+      "status": "rejected",
+      "id": "DAX8pxBiw2Y"
+    },
+    {
+      "name": "Darshan",
+      "date": "",
+      "reason": "",
+      "status": "rejected",
+      "id": "ebCZAZ-PIw8"
+    },
+    {
+      "name": "Darshan",
+      "date": "2025-02-04",
+      "reason": "bike",
+      "status": "approved",
+      "id": "R4wC4csBkXY"
     }
   ],
   "attendance": [

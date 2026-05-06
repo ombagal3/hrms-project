@@ -6,6 +6,7 @@ import {
   fetchUsers,
   updateUser
 } from "../features/users/userSlice";
+import PasswordInput from "../components/PasswordInput";
 import { getRoleFromEmail } from "../utils/roleHelper";
 
 const emptyForm = {
@@ -175,8 +176,7 @@ export default function Admin() {
             value={form.email}
             onChange={(e) => handleChange("email", e.target.value)}
           />
-          <input
-            type="password"
+          <PasswordInput
             placeholder="Password: Aa@12345"
             title="Minimum 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character"
             value={form.password}

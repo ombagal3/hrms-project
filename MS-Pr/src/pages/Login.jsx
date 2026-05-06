@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import PasswordInput from "../components/PasswordInput";
 import { loginUser } from "../features/auth/authSlice";
 
 export default function Login() {
@@ -27,6 +28,19 @@ export default function Login() {
 
   return (
     <div className="login-page">
+      <div className="bubble-layer" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
+
       <div className="login-card">
         <div className="login-brand">
           <span className="brand-logo">H</span>
@@ -44,9 +58,8 @@ export default function Login() {
         />
 
         <label>Password</label>
-        <input
+        <PasswordInput
           placeholder="Password"
-          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
