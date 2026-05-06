@@ -1,6 +1,8 @@
 export const normalHours = 8;
 export const monthlyWorkDays = 26;
 export const monthlyWorkHours = normalHours * monthlyWorkDays;
+export const employeeTaxDeduction = 200;
+export const pfRate = 0.12;
 
 export const roundMoney = (value) => Math.round(Number(value || 0) * 100) / 100;
 
@@ -75,6 +77,11 @@ export const isSameMonthKey = (dateKey, value = new Date()) => {
   return String(dateKey || "").startsWith(monthKey);
 };
 
+export const getMonthKey = (value = new Date()) => {
+  const date = value instanceof Date ? value : new Date(value);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+};
+
 export const getPaidSundaysUntilToday = (value = new Date()) => {
   const today = value instanceof Date ? value : new Date(value);
   const { start, end } = getCurrentMonthRange(today);
@@ -119,4 +126,34 @@ export const getAttendanceTotal = (records) => {
   return roundMoney(
     records.reduce((total, item) => total + Number(item.salaryAmount || 0), 0)
   );
+};
+
+export const calculateSalaryDeductions = (salaryAmount, additionalDeduction = 0) => {
+  const grossSalary = roundMoney(salaryAmount);
+  const otherDeduction = Math.min(
+    roundMoney(additionalDeduction),
+    grossSalary
+  );
+  const salaryAfterOtherDeductions = roundMoney(
+    Math.max(0, grossSalary - otherDeduction)
+  );
+  const taxDeduction =
+    salaryAfterOtherDeductions > 0
+      ? Math.min(employeeTaxDeduction, salaryAfterOtherDeductions)
+      : 0;
+  const salaryAfterTax = roundMoney(
+    Math.max(0, salaryAfterOtherDeductions - taxDeduction)
+  );
+  const pfDeduction = roundMoney(salaryAfterTax * pfRate);
+  const netSalary = roundMoney(Math.max(0, salaryAfterTax - pfDeduction));
+
+  return {
+    grossSalary,
+    otherDeduction,
+    salaryAfterOtherDeductions,
+    taxDeduction,
+    salaryAfterTax,
+    pfDeduction,
+    netSalary
+  };
 };

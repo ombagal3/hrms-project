@@ -8,6 +8,7 @@ import {
 } from "../features/users/userSlice";
 import PasswordInput from "../components/PasswordInput";
 import { getRoleFromEmail } from "../utils/roleHelper";
+import { getLocalDateKey } from "../utils/payroll";
 
 const emptyForm = {
   name: "",
@@ -54,6 +55,7 @@ export default function Admin() {
 
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
   const managerOptions = users.filter((user) => user.role === "manager");
+  const todayKey = getLocalDateKey();
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -82,6 +84,11 @@ export default function Admin() {
       alert(
         "Password me minimum 8 characters, 1 uppercase, 1 lowercase, 1 number aur 1 special character hona chahiye"
       );
+      return;
+    }
+
+    if (form.dob > todayKey) {
+      alert("DOB me future date select nahi kar sakte");
       return;
     }
 
@@ -264,6 +271,7 @@ export default function Admin() {
           />
           <input
             type="date"
+            max={todayKey}
             value={form.dob}
             onChange={(e) => handleChange("dob", e.target.value)}
           />

@@ -8,11 +8,9 @@ import {
 import { fetchLeaves, updateLeave } from "../features/leave/leaveSlice";
 import { fetchUsers } from "../features/users/userSlice";
 import {
-  buildSundayAttendance,
   calculateCheckoutPayroll,
   formatTime,
   getLocalDateKey,
-  getPaidSundaysUntilToday,
   getPayrollRates,
   normalHours,
   roundMoney
@@ -98,25 +96,6 @@ export default function Manager() {
   );
   const monthlySalary = Number(manager?.monthlySalary || manager?.salary || 0);
   const { dailySalary, hourlySalary } = getPayrollRates(monthlySalary);
-
-  useEffect(() => {
-    if (!manager?.id || !monthlySalary) return;
-
-    getPaidSundaysUntilToday().forEach((sunday) => {
-      const alreadyAdded = managerAttendance.some((item) => item.date === sunday);
-      if (!alreadyAdded) {
-        dispatch(
-          markAttendance(
-            buildSundayAttendance({
-              user: manager,
-              date: sunday,
-              monthlySalary
-            })
-          )
-        );
-      }
-    });
-  }, [dispatch, manager, managerAttendance, monthlySalary]);
 
   const handleUpdate = (leave, status) => {
     dispatch(updateLeave({ ...leave, status }));

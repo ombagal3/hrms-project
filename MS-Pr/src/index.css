@@ -552,6 +552,14 @@ p {
   background: #374151;
 }
 
+.month-picker {
+  min-height: 40px;
+  border: 1px solid #cfd8e3;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-weight: 800;
+}
+
 .search-box {
   max-width: 280px;
 }
@@ -660,6 +668,21 @@ td span {
   color: #ffffff;
   background: #198754;
   font-size: 18px;
+}
+
+.leave-day-note {
+  display: inline-grid;
+  gap: 4px;
+  min-height: 52px;
+  border: 1px solid #f5c2c7;
+  border-radius: 6px;
+  padding: 10px 14px;
+  color: #842029;
+  background: #f8d7da;
+}
+
+.leave-day-note span {
+  font-size: 14px;
 }
 
 .attendance-details {
@@ -1261,6 +1284,7 @@ td span {
   .small-btn,
   .danger-btn,
   .print-btn,
+  .month-picker,
   .tabs button,
   .pagination button {
     width: 100%;

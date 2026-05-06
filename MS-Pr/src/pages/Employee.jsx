@@ -8,14 +8,13 @@ import {
 import { applyLeave, fetchLeaves } from "../features/leave/leaveSlice";
 import { fetchUsers } from "../features/users/userSlice";
 import {
-  buildSundayAttendance,
+  calculateSalaryDeductions,
   calculateCheckoutPayroll,
   formatTime,
   getAttendanceTotal,
   getLocalDateKey,
-  getPaidSundaysUntilToday,
+  getMonthKey,
   getPayrollRates,
-  isSameMonthKey,
   monthlyWorkHours,
   normalHours,
   roundMoney
@@ -28,6 +27,7 @@ export default function Employee() {
   const [reason, setReason] = useState("");
   const [activeTab, setActiveTab] = useState("attendance");
   const [now, setNow] = useState(new Date());
+  const [selectedMonth, setSelectedMonth] = useState(getMonthKey());
 
   const savedUser = JSON.parse(localStorage.getItem("user") || "null");
   const attendance = useSelector((state) => state.attendance.list);
@@ -56,8 +56,13 @@ export default function Employee() {
   const today = getLocalDateKey();
 
   const myLeaves = useMemo(() => {
-    return leaves.filter((leave) => leave.name === user?.name);
-  }, [leaves, user?.name]);
+    return leaves.filter(
+      (leave) =>
+        leave.userId === user?.id ||
+        leave.email === user?.email ||
+        leave.name === user?.name
+    );
+  }, [leaves, user?.email, user?.id, user?.name]);
 
   const myAttendance = useMemo(() => {
     return attendance.filter(
@@ -68,7 +73,15 @@ export default function Employee() {
     );
   }, [attendance, user?.email, user?.id, user?.name]);
 
-  const todayAttendance = myAttendance.find((item) => item.date === today);
+  const todayAttendance = myAttendance.find(
+    (item) =>
+      item.date === today &&
+      item.dayType !== "paid-sunday" &&
+      item.status !== "paid-sunday"
+  );
+  const todayLeave = myLeaves.find(
+    (leave) => leave.date === today && leave.status !== "rejected"
+  );
   const activeAttendance = myAttendance.find(
     (item) => item.date === today && item.status === "checked-in"
   );
@@ -78,32 +91,31 @@ export default function Employee() {
   const totalLeaves = myLeaves.length;
   const pendingLeaves = myLeaves.filter((l) => l.status === "pending").length;
   const approvedLeaves = myLeaves.filter((l) => l.status === "approved").length;
-  const monthlyAttendance = myAttendance.filter((item) =>
-    isSameMonthKey(item.date, now)
+  const visibleAttendance = myAttendance.filter(
+    (item) => item.dayType !== "paid-sunday" && item.status !== "paid-sunday"
+  );
+  const salaryMonthKey = selectedMonth || getMonthKey();
+  const monthlyAttendance = visibleAttendance.filter((item) =>
+    String(item.date || "").startsWith(salaryMonthKey)
   );
   const monthlyPaidDays = monthlyAttendance.filter(
-    (item) => item.status === "completed" || item.status === "paid-sunday"
+    (item) => item.status === "completed"
   ).length;
-  const monthlyTotalSalary = getAttendanceTotal(monthlyAttendance);
-
-  useEffect(() => {
-    if (!user?.id || !monthlySalary) return;
-
-    getPaidSundaysUntilToday().forEach((sunday) => {
-      const alreadyAdded = myAttendance.some((item) => item.date === sunday);
-      if (!alreadyAdded) {
-        dispatch(
-          markAttendance(
-            buildSundayAttendance({
-              user,
-              date: sunday,
-              monthlySalary
-            })
-          )
-        );
-      }
-    });
-  }, [dispatch, monthlySalary, myAttendance, user]);
+  const monthlyApprovedLeaves = myLeaves.filter(
+    (leave) =>
+      leave.status === "approved" &&
+      String(leave.date || "").startsWith(salaryMonthKey)
+  );
+  const paidLeaveDays = Math.min(1, monthlyApprovedLeaves.length);
+  const unpaidLeaveDays = Math.max(0, monthlyApprovedLeaves.length - paidLeaveDays);
+  const paidLeaveAmount = roundMoney(dailySalary * paidLeaveDays);
+  const leaveDeduction = roundMoney(dailySalary * unpaidLeaveDays);
+  const attendanceSalary = getAttendanceTotal(monthlyAttendance);
+  const monthlyGrossSalary = roundMoney(attendanceSalary + paidLeaveAmount);
+  const salarySummary = calculateSalaryDeductions(
+    monthlyGrossSalary,
+    leaveDeduction
+  );
 
   if (!user) {
     return <h3>Please login again</h3>;
@@ -141,6 +153,11 @@ export default function Employee() {
     const currentTime = new Date();
 
     if (!activeAttendance) {
+      if (todayLeave) {
+        alert("Aaj leave applied hai, check in nahi kar sakte");
+        return;
+      }
+
       if (todayAttendance) {
         alert("Today attendance already completed");
         return;
@@ -189,11 +206,12 @@ export default function Employee() {
   };
 
   const handlePrintSalarySlip = () => {
-    const monthName = now.toLocaleString("default", {
+    const salaryMonth = new Date(`${salaryMonthKey}-01T00:00:00`);
+    const monthName = salaryMonth.toLocaleString("default", {
       month: "long",
       year: "numeric"
     });
-    const rows = monthlyAttendance
+    const attendanceRows = monthlyAttendance
       .map(
         (item) => `
           <tr>
@@ -207,6 +225,22 @@ export default function Employee() {
         `
       )
       .join("");
+    const leaveRows = monthlyApprovedLeaves
+      .map((leave, index) => {
+        const isPaidLeave = index === 0;
+        return `
+          <tr>
+            <td>${leave.date}</td>
+            <td>-</td>
+            <td>-</td>
+            <td>0</td>
+            <td>${isPaidLeave ? "Paid Leave" : "Unpaid Leave"}</td>
+            <td>${isPaidLeave ? `Rs ${roundMoney(dailySalary)}` : `- Rs ${roundMoney(dailySalary)}`}</td>
+          </tr>
+        `;
+      })
+      .join("");
+    const rows = `${attendanceRows}${leaveRows}`;
 
     const slipWindow = window.open("", "_blank", "width=900,height=700");
     if (!slipWindow) {
@@ -246,7 +280,13 @@ export default function Employee() {
             <div class="box"><span>Monthly Salary</span><strong>Rs ${monthlySalary}</strong></div>
             <div class="box"><span>Daily Salary</span><strong>Rs ${roundMoney(dailySalary)}</strong></div>
             <div class="box"><span>Paid Days</span><strong>${monthlyPaidDays}</strong></div>
-            <div class="box"><span>Total Pay</span><strong>Rs ${monthlyTotalSalary}</strong></div>
+            <div class="box"><span>Paid Leave</span><strong>${paidLeaveDays}</strong></div>
+            <div class="box"><span>Unpaid Leave</span><strong>${unpaidLeaveDays}</strong></div>
+            <div class="box"><span>Gross Pay</span><strong>Rs ${salarySummary.grossSalary}</strong></div>
+            <div class="box"><span>Leave Deduction</span><strong>Rs ${salarySummary.otherDeduction}</strong></div>
+            <div class="box"><span>Tax Deduction</span><strong>Rs ${salarySummary.taxDeduction}</strong></div>
+            <div class="box"><span>PF 12%</span><strong>Rs ${salarySummary.pfDeduction}</strong></div>
+            <div class="box"><span>Net Salary</span><strong>Rs ${salarySummary.netSalary}</strong></div>
           </div>
           <table>
             <thead>
@@ -261,7 +301,7 @@ export default function Employee() {
             </thead>
             <tbody>${rows || "<tr><td colspan='6'>No attendance found</td></tr>"}</tbody>
           </table>
-          <div class="total">Net Salary: Rs ${monthlyTotalSalary}</div>
+          <div class="total">Net Salary: Rs ${salarySummary.netSalary}</div>
         </body>
       </html>
     `);
@@ -302,8 +342,8 @@ export default function Employee() {
             <strong>
               {activeAttendance
                 ? "Checked In"
-                : todayAttendance?.status === "paid-sunday"
-                ? "Paid Sunday"
+                : todayLeave
+                ? "On Leave"
                 : todayAttendance?.checkOutAt
                 ? "Completed"
                 : "Not Started"}
@@ -331,13 +371,26 @@ export default function Employee() {
           <button className="print-btn" onClick={handlePrintSalarySlip}>
             Print Salary Slip
           </button>
+          <input
+            className="month-picker"
+            type="month"
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+          />
         </div>
 
         {activeTab === "attendance" && (
           <div className="attendance-box">
-            <button className="attendance-btn" onClick={handleAttendance}>
-              {activeAttendance ? "Check Out" : "Check In"}
-            </button>
+            {todayLeave && !activeAttendance ? (
+              <div className="leave-day-note">
+                <strong>On Leave</strong>
+                <span>Check in is closed for today's leave request.</span>
+              </div>
+            ) : (
+              <button className="attendance-btn" onClick={handleAttendance}>
+                {activeAttendance ? "Check Out" : "Check In"}
+              </button>
+            )}
 
             <div className="attendance-details">
               <div>
@@ -400,8 +453,32 @@ export default function Employee() {
             <strong>{approvedLeaves}</strong>
           </div>
           <div className="stat-card">
-            <span>This Month Pay</span>
-            <strong>Rs {monthlyTotalSalary}</strong>
+            <span>Paid Leave</span>
+            <strong>{paidLeaveDays}</strong>
+          </div>
+          <div className="stat-card">
+            <span>Unpaid Leave</span>
+            <strong>{unpaidLeaveDays}</strong>
+          </div>
+          <div className="stat-card">
+            <span>Gross Pay</span>
+            <strong>Rs {salarySummary.grossSalary}</strong>
+          </div>
+          <div className="stat-card">
+            <span>Leave Cut</span>
+            <strong>Rs {salarySummary.otherDeduction}</strong>
+          </div>
+          <div className="stat-card">
+            <span>Tax Cut</span>
+            <strong>Rs {salarySummary.taxDeduction}</strong>
+          </div>
+          <div className="stat-card">
+            <span>PF Cut</span>
+            <strong>Rs {salarySummary.pfDeduction}</strong>
+          </div>
+          <div className="stat-card">
+            <span>Net Pay</span>
+            <strong>Rs {salarySummary.netSalary}</strong>
           </div>
         </div>
 
@@ -419,7 +496,7 @@ export default function Employee() {
               </tr>
             </thead>
             <tbody>
-              {myAttendance.map((item) => (
+              {monthlyAttendance.map((item) => (
                 <tr key={item.id}>
                   <td>{item.date}</td>
                   <td>{item.dayType === "paid-sunday" ? "Sunday Paid" : formatTime(item.checkInAt)}</td>
@@ -430,6 +507,11 @@ export default function Employee() {
                   <td>Rs {item.salaryAmount || 0}</td>
                 </tr>
               ))}
+              {monthlyAttendance.length === 0 && (
+                <tr>
+                  <td colSpan="7">No attendance found for selected month</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
