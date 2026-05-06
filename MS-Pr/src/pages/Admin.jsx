@@ -156,6 +156,81 @@ export default function Admin() {
 
   return (
     <main className="page-shell">
+
+      <section className="panel">
+        <div className="section-heading">
+          <div>
+            <h2>Employee List</h2>
+            <p>Search, edit, or delete saved employee records</p>
+          </div>
+          <input
+            className="search-box"
+            placeholder="Search employee..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1);
+            }}
+          />
+        </div>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Field</th>
+                <th>Manager</th>
+                <th>Monthly Salary</th>
+                <th>Phone</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentUsers.map((user) => (
+                <tr key={user.id}>
+                  <td>
+                    <strong>{user.name}</strong>
+                    <span>{user.email}</span>
+                  </td>
+                  <td>{user.role}</td>
+                  <td>{user.field || "-"}</td>
+                  <td>{user.managerName || "-"}</td>
+                  <td>{user.monthlySalary ? `Rs ${user.monthlySalary}` : "-"}</td>
+                  <td>{user.phone || "-"}</td>
+                  <td>
+                    <button className="small-btn" onClick={() => handleEdit(user)}>
+                      Edit
+                    </button>
+                    <button
+                      className="danger-btn"
+                      onClick={() => dispatch(deleteUser(user.id))}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {totalPages > 1 && (
+          <div className="pagination">
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <button
+                className={currentPage === index + 1 ? "active-page" : ""}
+                key={index}
+                onClick={() => setCurrentPage(index + 1)}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+        )}
+      </section>
+
       <section className="panel">
         <div className="section-heading">
           <div>
@@ -237,80 +312,6 @@ export default function Admin() {
             </button>
           )}
         </div>
-      </section>
-
-      <section className="panel">
-        <div className="section-heading">
-          <div>
-            <h2>Employee List</h2>
-            <p>Search, edit, or delete saved employee records</p>
-          </div>
-          <input
-            className="search-box"
-            placeholder="Search employee..."
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setCurrentPage(1);
-            }}
-          />
-        </div>
-
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Role</th>
-                <th>Field</th>
-                <th>Manager</th>
-                <th>Monthly Salary</th>
-                <th>Phone</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentUsers.map((user) => (
-                <tr key={user.id}>
-                  <td>
-                    <strong>{user.name}</strong>
-                    <span>{user.email}</span>
-                  </td>
-                  <td>{user.role}</td>
-                  <td>{user.field || "-"}</td>
-                  <td>{user.managerName || "-"}</td>
-                  <td>{user.monthlySalary ? `Rs ${user.monthlySalary}` : "-"}</td>
-                  <td>{user.phone || "-"}</td>
-                  <td>
-                    <button className="small-btn" onClick={() => handleEdit(user)}>
-                      Edit
-                    </button>
-                    <button
-                      className="danger-btn"
-                      onClick={() => dispatch(deleteUser(user.id))}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {totalPages > 1 && (
-          <div className="pagination">
-            {Array.from({ length: totalPages }).map((_, index) => (
-              <button
-                className={currentPage === index + 1 ? "active-page" : ""}
-                key={index}
-                onClick={() => setCurrentPage(index + 1)}
-              >
-                {index + 1}
-              </button>
-            ))}
-          </div>
-        )}
       </section>
     </main>
   );
