@@ -16,6 +16,7 @@ const emptyForm = {
   password: "",
   aadhaar: "",
   dob: "",
+  joinDate: "",
   field: "",
   managerId: "",
   monthlySalary: "",
@@ -68,6 +69,7 @@ export default function Admin() {
       "password",
       "aadhaar",
       "dob",
+      "joinDate",
       "field",
       "monthlySalary",
       "address",
@@ -89,6 +91,11 @@ export default function Admin() {
 
     if (form.dob > todayKey) {
       alert("DOB me future date select nahi kar sakte");
+      return;
+    }
+
+    if (form.joinDate > todayKey) {
+      alert("Join date me future date select nahi kar sakte");
       return;
     }
 
@@ -148,6 +155,7 @@ export default function Admin() {
       password: user.password || "",
       aadhaar: user.aadhaar || "",
       dob: user.dob || "",
+      joinDate: user.joinDate || "",
       field: user.field || "",
       managerId: user.managerId || "",
       monthlySalary: user.monthlySalary || user.salary || "",
@@ -188,6 +196,7 @@ export default function Admin() {
                 <th>Name</th>
                 <th>Role</th>
                 <th>Field</th>
+                <th>Join Date</th>
                 <th>Manager</th>
                 <th>Monthly Salary</th>
                 <th>Phone</th>
@@ -203,6 +212,7 @@ export default function Admin() {
                   </td>
                   <td>{user.role}</td>
                   <td>{user.field || "-"}</td>
+                  <td>{user.joinDate || "-"}</td>
                   <td>{user.managerName || "-"}</td>
                   <td>{user.monthlySalary ? `Rs ${user.monthlySalary}` : "-"}</td>
                   <td>{user.phone || "-"}</td>
@@ -274,6 +284,12 @@ export default function Admin() {
             max={todayKey}
             value={form.dob}
             onChange={(e) => handleChange("dob", e.target.value)}
+          />
+          <input
+            type="date"
+            max={todayKey}
+            value={form.joinDate}
+            onChange={(e) => handleChange("joinDate", e.target.value)}
           />
           <input
             placeholder="Field / Department"

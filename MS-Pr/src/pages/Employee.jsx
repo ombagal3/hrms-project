@@ -87,6 +87,7 @@ export default function Employee() {
   );
 
   const monthlySalary = Number(user?.monthlySalary || user?.salary || 0);
+  const joinMonthKey = user?.joinDate ? getMonthKey(user.joinDate) : "";
   const { dailySalary, hourlySalary } = getPayrollRates(monthlySalary);
   const totalLeaves = myLeaves.length;
   const pendingLeaves = myLeaves.filter((l) => l.status === "pending").length;
@@ -95,14 +96,17 @@ export default function Employee() {
     (item) => item.dayType !== "paid-sunday" && item.status !== "paid-sunday"
   );
   const salaryMonthKey = selectedMonth || getMonthKey();
+  const isBeforeJoinMonth =
+    joinMonthKey && salaryMonthKey.localeCompare(joinMonthKey) < 0;
   const monthlyAttendance = visibleAttendance.filter((item) =>
-    String(item.date || "").startsWith(salaryMonthKey)
+    !isBeforeJoinMonth && String(item.date || "").startsWith(salaryMonthKey)
   );
   const monthlyPaidDays = monthlyAttendance.filter(
     (item) => item.status === "completed"
   ).length;
   const monthlyApprovedLeaves = myLeaves.filter(
     (leave) =>
+      !isBeforeJoinMonth &&
       leave.status === "approved" &&
       String(leave.date || "").startsWith(salaryMonthKey)
   );
@@ -278,6 +282,7 @@ export default function Employee() {
           <p>${user.email || ""}</p>
           <div class="grid">
             <div class="box"><span>Monthly Salary</span><strong>Rs ${monthlySalary}</strong></div>
+            <div class="box"><span>Join Date</span><strong>${user.joinDate || "-"}</strong></div>
             <div class="box"><span>Daily Salary</span><strong>Rs ${roundMoney(dailySalary)}</strong></div>
             <div class="box"><span>Paid Days</span><strong>${monthlyPaidDays}</strong></div>
             <div class="box"><span>Paid Leave</span><strong>${paidLeaveDays}</strong></div>
@@ -375,6 +380,7 @@ export default function Employee() {
             className="month-picker"
             type="month"
             value={selectedMonth}
+            min={joinMonthKey || undefined}
             onChange={(e) => setSelectedMonth(e.target.value)}
           />
         </div>
