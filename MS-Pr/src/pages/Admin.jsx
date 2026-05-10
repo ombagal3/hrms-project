@@ -8,6 +8,7 @@ import {
 } from "../features/users/userSlice";
 import PasswordInput from "../components/PasswordInput";
 import { getRoleFromEmail } from "../utils/roleHelper";
+import { getLocalDateKey } from "../utils/payroll";
 
 const emptyForm = {
   name: "",
@@ -54,6 +55,7 @@ export default function Admin() {
 
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
   const managerOptions = users.filter((user) => user.role === "manager");
+  const todayKey = getLocalDateKey();
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -82,6 +84,11 @@ export default function Admin() {
       alert(
         "Password me minimum 8 characters, 1 uppercase, 1 lowercase, 1 number aur 1 special character hona chahiye"
       );
+      return;
+    }
+
+    if (form.dob > todayKey) {
+      alert("DOB me future date select nahi kar sakte");
       return;
     }
 
@@ -156,88 +163,6 @@ export default function Admin() {
 
   return (
     <main className="page-shell">
-      <section className="panel">
-        <div className="section-heading">
-          <div>
-            <h2>Admin Dashboard</h2>
-            <p>Employee information and monthly salary setup</p>
-          </div>
-          <span className="count-pill">{users.length} users</span>
-        </div>
-
-        <div className="employee-form">
-          <input
-            placeholder="Employee name"
-            value={form.name}
-            onChange={(e) => handleChange("name", e.target.value)}
-          />
-          <input
-            placeholder="Email emp... or mgr..."
-            value={form.email}
-            onChange={(e) => handleChange("email", e.target.value)}
-          />
-          <PasswordInput
-            placeholder="Password: Aa@12345"
-            title="Minimum 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character"
-            value={form.password}
-            onChange={(e) => handleChange("password", e.target.value)}
-          />
-          <input
-            placeholder="Aadhaar number"
-            value={form.aadhaar}
-            onChange={(e) => handleChange("aadhaar", e.target.value)}
-          />
-          <input
-            type="date"
-            value={form.dob}
-            onChange={(e) => handleChange("dob", e.target.value)}
-          />
-          <input
-            placeholder="Field / Department"
-            value={form.field}
-            onChange={(e) => handleChange("field", e.target.value)}
-          />
-          <select
-            value={form.managerId}
-            onChange={(e) => handleChange("managerId", e.target.value)}
-          >
-            <option value="">Select manager for employee</option>
-            {managerOptions.map((manager) => (
-              <option key={manager.id} value={manager.id}>
-                {manager.name} - {manager.field || "Team"}
-              </option>
-            ))}
-          </select>
-          <input
-            type="number"
-            min="0"
-            placeholder="Monthly Salary"
-            value={form.monthlySalary}
-            onChange={(e) => handleChange("monthlySalary", e.target.value)}
-          />
-          <input
-            placeholder="Phone"
-            value={form.phone}
-            onChange={(e) => handleChange("phone", e.target.value)}
-          />
-          <textarea
-            placeholder="Address"
-            value={form.address}
-            onChange={(e) => handleChange("address", e.target.value)}
-          />
-        </div>
-
-        <div className="actions">
-          <button className="primary-btn" onClick={handleSubmit}>
-            {editId ? "Update Employee" : "Save Employee"}
-          </button>
-          {editId && (
-            <button className="ghost-btn" onClick={handleCancel}>
-              Cancel
-            </button>
-          )}
-        </div>
-      </section>
 
       <section className="panel">
         <div className="section-heading">
@@ -311,6 +236,90 @@ export default function Admin() {
             ))}
           </div>
         )}
+      </section>
+
+      <section className="panel">
+        <div className="section-heading">
+          <div>
+            <h2>Admin Dashboard</h2>
+            <p>Employee information and monthly salary setup</p>
+          </div>
+          <span className="count-pill">{users.length} users</span>
+        </div>
+
+        <div className="employee-form">
+          <input
+            placeholder="Employee name"
+            value={form.name}
+            onChange={(e) => handleChange("name", e.target.value)}
+          />
+          <input
+            placeholder="Email emp... or mgr..."
+            value={form.email}
+            onChange={(e) => handleChange("email", e.target.value)}
+          />
+          <PasswordInput
+            placeholder="Password: Aa@12345"
+            title="Minimum 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character"
+            value={form.password}
+            onChange={(e) => handleChange("password", e.target.value)}
+          />
+          <input
+            placeholder="Aadhaar number"
+            value={form.aadhaar}
+            onChange={(e) => handleChange("aadhaar", e.target.value)}
+          />
+          <input
+            type="date"
+            max={todayKey}
+            value={form.dob}
+            onChange={(e) => handleChange("dob", e.target.value)}
+          />
+          <input
+            placeholder="Field / Department"
+            value={form.field}
+            onChange={(e) => handleChange("field", e.target.value)}
+          />
+          <select
+            value={form.managerId}
+            onChange={(e) => handleChange("managerId", e.target.value)}
+          >
+            <option value="">Select manager for employee</option>
+            {managerOptions.map((manager) => (
+              <option key={manager.id} value={manager.id}>
+                {manager.name} - {manager.field || "Team"}
+              </option>
+            ))}
+          </select>
+          <input
+            type="number"
+            min="0"
+            placeholder="Monthly Salary"
+            value={form.monthlySalary}
+            onChange={(e) => handleChange("monthlySalary", e.target.value)}
+          />
+          <input
+            placeholder="Phone"
+            value={form.phone}
+            onChange={(e) => handleChange("phone", e.target.value)}
+          />
+          <textarea
+            placeholder="Address"
+            value={form.address}
+            onChange={(e) => handleChange("address", e.target.value)}
+          />
+        </div>
+
+        <div className="actions">
+          <button className="primary-btn" onClick={handleSubmit}>
+            {editId ? "Update Employee" : "Save Employee"}
+          </button>
+          {editId && (
+            <button className="ghost-btn" onClick={handleCancel}>
+              Cancel
+            </button>
+          )}
+        </div>
       </section>
     </main>
   );

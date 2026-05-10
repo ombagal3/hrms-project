@@ -507,6 +507,7 @@ p {
 .ghost-btn,
 .small-btn,
 .danger-btn,
+.print-btn,
 .tabs button,
 .pagination button,
 .attendance-btn,
@@ -540,6 +541,23 @@ p {
 
 .danger-btn {
   margin-left: 8px;
+}
+
+.print-btn {
+  color: #ffffff;
+  background: #111827;
+}
+
+.print-btn:hover {
+  background: #374151;
+}
+
+.month-picker {
+  min-height: 40px;
+  border: 1px solid #cfd8e3;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-weight: 800;
 }
 
 .search-box {
@@ -582,6 +600,7 @@ td {
   border-bottom: 1px solid #e5edf4;
   padding: 12px;
   vertical-align: middle;
+  overflow-wrap: anywhere;
 }
 
 th {
@@ -651,9 +670,24 @@ td span {
   font-size: 18px;
 }
 
+.leave-day-note {
+  display: inline-grid;
+  gap: 4px;
+  min-height: 52px;
+  border: 1px solid #f5c2c7;
+  border-radius: 6px;
+  padding: 10px 14px;
+  color: #842029;
+  background: #f8d7da;
+}
+
+.leave-day-note span {
+  font-size: 14px;
+}
+
 .attendance-details {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
   margin-top: 16px;
 }
@@ -813,6 +847,49 @@ td span {
   border: 1px solid #dbe4f0;
   border-radius: 8px;
   background: #f8fafc;
+}
+
+.manager-attendance-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px;
+  border: 1px solid #dbe4f0;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 14px 34px rgba(31, 41, 55, 0.08);
+}
+
+.manager-attendance-panel h3 {
+  color: #111827;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.manager-attendance-panel p {
+  color: #667085;
+  margin-top: 6px;
+}
+
+.manager-attendance-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.manager-attendance-actions > div {
+  min-width: 180px;
+  display: grid;
+  gap: 4px;
+  color: #475569;
+  font-weight: 700;
+}
+
+.manager-attendance-actions strong {
+  color: #111827;
+  font-size: 20px;
 }
 
 .manager-profile > span,
@@ -1074,6 +1151,25 @@ td span {
   margin: 8px 0;
 }
 
+@media (max-width: 1024px) {
+  .stat-grid,
+  .manager-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .attendance-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .employee-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .employee-form textarea {
+    grid-column: span 2;
+  }
+}
+
 @media (max-width: 820px) {
   .section-heading,
   .employee-form,
@@ -1118,5 +1214,98 @@ td span {
 
   .manager-stats {
     grid-template-columns: 1fr;
+  }
+
+  .manager-attendance-panel,
+  .manager-attendance-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .manager-attendance-actions {
+    justify-content: stretch;
+  }
+
+  .attendance-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  body {
+    background: #f3f6fb;
+  }
+
+  .login-page,
+  .page-shell,
+  .manager-shell {
+    padding: 16px 0;
+  }
+
+  .login-page {
+    padding: 16px;
+  }
+
+  .page-shell,
+  .manager-shell,
+  .container {
+    width: min(100% - 20px, 1180px);
+  }
+
+  .panel,
+  .manager-hero,
+  .manager-panel,
+  .manager-attendance-panel,
+  .login-card {
+    padding: 16px;
+  }
+
+  .section-heading h2,
+  .manager-hero h2,
+  .login-brand h2 {
+    font-size: 22px;
+  }
+
+  .stat-card strong,
+  .attendance-details strong {
+    font-size: 18px;
+  }
+
+  .actions,
+  .tabs,
+  .pagination,
+  .approval-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .primary-btn,
+  .ghost-btn,
+  .small-btn,
+  .danger-btn,
+  .print-btn,
+  .month-picker,
+  .tabs button,
+  .pagination button {
+    width: 100%;
+  }
+
+  .danger-btn {
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  .member-card {
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+
+  .member-card p {
+    grid-column: 2;
+  }
+
+  th,
+  td {
+    padding: 10px;
+    font-size: 13px;
   }
 }
