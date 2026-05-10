@@ -42,6 +42,51 @@
       "role": "employee",
       "managerName": "Darshan Pawar",
       "id": "2tgPi7k5gCQ"
+    },
+    {
+      "name": "Vishal",
+      "email": "empvishal@gmail.com",
+      "password": "Vishal@123",
+      "aadhaar": "678787656656",
+      "dob": "2001-02-12",
+      "field": "Fullstack dev",
+      "managerId": "2y9pzFzZZ9s",
+      "monthlySalary": 21000,
+      "address": "at surat",
+      "phone": "7867566787",
+      "role": "employee",
+      "managerName": "Darshan Pawar",
+      "id": "tJYktdi5EiY"
+    },
+    {
+      "name": "Sachin",
+      "email": "empsachin@gmail.com",
+      "password": "Sachin@123",
+      "aadhaar": "84736466473",
+      "dob": "2026-05-04",
+      "field": "Fullstack Dev",
+      "managerId": "2y9pzFzZZ9s",
+      "monthlySalary": 40000,
+      "address": "india",
+      "phone": "292826353",
+      "role": "employee",
+      "managerName": "Darshan Pawar",
+      "id": "SXDv0lKEO_A"
+    },
+    {
+      "name": "Raj ",
+      "email": "mgrraj@gmail.com",
+      "password": "Raj@12345",
+      "aadhaar": "632726271862",
+      "dob": "2001-07-03",
+      "field": "UI UX",
+      "managerId": "",
+      "monthlySalary": 450000,
+      "address": "india\n",
+      "phone": "8297271811",
+      "role": "manager",
+      "managerName": "",
+      "id": "HlwYI-WqUPY"
     }
   ],
   "leaves": [
@@ -88,6 +133,7 @@
       "id": "umXaKFZRvF0"
     },
     {
+<<<<<<< Updated upstream
       "name": "Darshan",
       "date": "2025-02-07",
       "reason": "bike a",
@@ -114,6 +160,30 @@
       "reason": "bike",
       "status": "approved",
       "id": "R4wC4csBkXY"
+=======
+      "userId": "2tgPi7k5gCQ",
+      "name": "Om Bhagl",
+      "email": "empom@gmail.com",
+      "field": "Full Stack Dev",
+      "managerId": "2y9pzFzZZ9s",
+      "managerName": "Darshan Pawar",
+      "date": "2026-05-28",
+      "reason": "helat issue",
+      "status": "approved",
+      "id": "WM6FzlemPAU"
+    },
+    {
+      "userId": "SXDv0lKEO_A",
+      "name": "Sachin",
+      "email": "empsachin@gmail.com",
+      "field": "Fullstack Dev",
+      "managerId": "2y9pzFzZZ9s",
+      "managerName": "Darshan Pawar",
+      "date": "2026-06-05",
+      "reason": "helth issue",
+      "status": "approved",
+      "id": "MVoUseawj9g"
+>>>>>>> Stashed changes
     }
   ],
   "attendance": [
@@ -172,6 +242,42 @@
       "salaryAmount": 4.56,
       "status": "completed",
       "id": "wuZ6WZKCFyE"
+    },
+    {
+      "userId": "tJYktdi5EiY",
+      "name": "Vishal",
+      "email": "empvishal@gmail.com",
+      "date": "2026-05-03",
+      "checkIn": "11:07:22 PM",
+      "checkInAt": "2026-05-03T17:37:22.216Z",
+      "checkOut": "",
+      "checkOutAt": "",
+      "normalHours": 8,
+      "monthlySalary": 21000,
+      "hourlySalary": 100.96153846153847,
+      "workedHours": 0,
+      "overtimeHours": 0,
+      "salaryAmount": 0,
+      "status": "checked-in",
+      "id": "yixFyGuSgn0"
+    },
+    {
+      "userId": "SXDv0lKEO_A",
+      "name": "Sachin",
+      "email": "empsachin@gmail.com",
+      "date": "2026-05-03",
+      "checkIn": "11:22:12 PM",
+      "checkInAt": "2026-05-03T17:52:12.775Z",
+      "checkOut": "11:24:47 PM",
+      "checkOutAt": "2026-05-03T17:54:47.325Z",
+      "normalHours": 8,
+      "monthlySalary": 40000,
+      "hourlySalary": 192.30769230769232,
+      "workedHours": 0.04,
+      "overtimeHours": 0,
+      "salaryAmount": 8.26,
+      "status": "completed",
+      "id": "e61QjkAo5SI"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
