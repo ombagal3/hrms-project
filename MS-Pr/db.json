@@ -127,6 +127,22 @@
       "role": "employee",
       "managerName": "Vishal More",
       "id": "emp_sneha_2025"
+    },
+    {
+      "name": "prince",
+      "email": "empprince@gmail.com",
+      "password": "Prince@123",
+      "aadhaar": "100000455",
+      "dob": "2008-05-05",
+      "joinDate": "2026-05-11",
+      "field": "Full Stack dev",
+      "managerId": "2y9pzFzZZ9s",
+      "monthlySalary": 25000,
+      "address": "BHESTAN CHAR RASTA NEAR RANCHOD RAY MANDIR JANKI PARK SOCIETY G82",
+      "phone": "7878033136",
+      "role": "employee",
+      "managerName": "Darshan Pawar",
+      "id": "sQWZ44fsX_o"
     }
   ],
   "leaves": [
@@ -151,7 +167,7 @@
       "managerName": "Darshan Pawar",
       "date": "2026-05-07",
       "reason": "Family work",
-      "status": "pending",
+      "status": "rejected",
       "id": "leave_riya_20260507"
     },
     {
@@ -259,6 +275,18 @@
       "reason": "bike ",
       "status": "approved",
       "id": "u0tjyTnDUBE"
+    },
+    {
+      "userId": "2tgPi7k5gCQ",
+      "name": "Om Bagal",
+      "email": "empom@gmail.com",
+      "field": "Full Stack Dev",
+      "managerId": "2y9pzFzZZ9s",
+      "managerName": "Darshan Pawar",
+      "date": "2026-05-11",
+      "reason": "out of city",
+      "status": "pending",
+      "id": "3qR6cH4qWxE"
     }
   ],
   "attendance": [
@@ -564,6 +592,43 @@
       "salaryAmount": 4.56,
       "status": "completed",
       "id": "wuZ6WZKCFyE"
+    },
+    {
+      "userId": "sQWZ44fsX_o",
+      "name": "prince",
+      "email": "empprince@gmail.com",
+      "date": "2026-05-11",
+      "checkIn": "6:46:40 PM",
+      "checkInAt": "2026-05-11T13:16:40.841Z",
+      "checkOut": "",
+      "checkOutAt": "",
+      "normalHours": 8,
+      "monthlySalary": 25000,
+      "hourlySalary": 120.1923076923077,
+      "workedHours": 0,
+      "overtimeHours": 0,
+      "salaryAmount": 0,
+      "status": "checked-in",
+      "id": "LxVGv9LzXRo"
+    },
+    {
+      "userId": "2y9pzFzZZ9s",
+      "name": "Darshan Pawar",
+      "email": "mgrdarshan@gmail.com",
+      "date": "2026-05-11",
+      "checkIn": "6:49:10 PM",
+      "checkInAt": "2026-05-11T13:19:10.595Z",
+      "checkOut": "6:52:57 PM",
+      "checkOutAt": "2026-05-11T13:22:57.324Z",
+      "normalHours": 8,
+      "monthlySalary": 300000,
+      "hourlySalary": 1442.3076923076924,
+      "workedHours": 0.06,
+      "overtimeHours": 0,
+      "salaryAmount": 90.84,
+      "status": "completed",
+      "id": "0SCZ7dp_yX8",
+      "dayType": "workday"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
