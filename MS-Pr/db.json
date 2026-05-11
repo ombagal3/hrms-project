@@ -33,7 +33,7 @@
       "id": "2y9pzFzZZ9s"
     },
     {
-      "name": "Om Bhagl",
+      "name": "Om Bagal",
       "email": "empom@gmail.com",
       "password": "Om@12345",
       "aadhaar": "567890874",
@@ -47,6 +47,7 @@
       "role": "employee",
       "managerName": "Darshan Pawar",
       "id": "2tgPi7k5gCQ"
+<<<<<<< HEAD
     },
     {
       "name": "Riya Shah",
@@ -179,6 +180,94 @@
       "id": "leave_sneha_20260429"
     }
   ],
+=======
+    }
+  ],
+  "leaves": [
+    {
+      "name": "Om Bagal",
+      "date": "2026-04-30",
+      "reason": "helth issue",
+      "status": "approved",
+      "id": "o916E0_NMXg"
+    },
+    {
+      "name": "Om Bagal",
+      "date": "2026-04-30",
+      "reason": "helth issue",
+      "status": "approved",
+      "id": "g6QOuGIPMEg"
+    },
+    {
+      "name": "Darshan",
+      "date": "2026-04-18",
+      "reason": "helth",
+      "status": "approved",
+      "id": "oD4-plFR06Q"
+    },
+    {
+      "name": "Om Bagal",
+      "date": "2026-04-03",
+      "reason": "metting",
+      "status": "rejected",
+      "id": "vo7BxhgWyiw"
+    },
+    {
+      "name": "Darshan",
+      "date": "2026-04-30",
+      "reason": "bikde",
+      "status": "approved",
+      "id": "bQWI_uuPzD0"
+    },
+    {
+      "name": "Darshan",
+      "date": "2026-04-25",
+      "reason": "work is hard i am from remote today",
+      "status": "approved",
+      "id": "umXaKFZRvF0"
+    },
+    {
+      "name": "Darshan",
+      "date": "2025-02-07",
+      "reason": "bike a",
+      "status": "approved",
+      "id": "DurZBfTZ56A"
+    },
+    {
+      "name": "Darshan",
+      "date": "2025-02-07",
+      "reason": "bike a",
+      "status": "rejected",
+      "id": "DAX8pxBiw2Y"
+    },
+    {
+      "name": "Darshan",
+      "date": "",
+      "reason": "",
+      "status": "rejected",
+      "id": "ebCZAZ-PIw8"
+    },
+    {
+      "name": "Darshan",
+      "date": "2025-02-04",
+      "reason": "bike",
+      "status": "approved",
+      "id": "R4wC4csBkXY"
+    },
+    {
+      "userId": "2tgPi7k5gCQ",
+      "name": "Om Bhagl",
+      "email": "empom@gmail.com",
+      "field": "Full Stack Dev",
+      "managerId": "2y9pzFzZZ9s",
+      "managerName": "Darshan Pawar",
+      "date": "2026-05-23",
+      "reason": "bike ",
+      "status": "approved",
+      "id": "u0tjyTnDUBE"
+    }
+  ],
+>>>>>>> ca017987f5da68d6b817906a9c93ab5fdc8d1287
   "attendance": [
     {
       "userId": "2y9pzFzZZ9s",
@@ -196,6 +285,7 @@
       "overtimeHours": 1.25,
       "salaryAmount": 13341.35,
       "status": "completed",
+<<<<<<< HEAD
       "dayType": "workday",
       "id": "att_darshan_20260501"
     },
@@ -464,6 +554,27 @@
       "status": "completed",
       "dayType": "workday",
       "id": "att_sneha_20260502"
+=======
+      "id": "Pw3vAtyNAZc"
+    },
+    {
+      "userId": "2tgPi7k5gCQ",
+      "name": "Om Bagal",
+      "email": "empom@gmail.com",
+      "date": "2026-05-03",
+      "checkIn": "10:17:43 PM",
+      "checkInAt": "2026-05-03T16:47:43.227Z",
+      "checkOut": "10:18:00 PM",
+      "checkOutAt": "2026-05-03T16:48:00.311Z",
+      "normalHours": 8,
+      "monthlySalary": 200000,
+      "hourlySalary": 961.5384615384615,
+      "workedHours": 0,
+      "overtimeHours": 0,
+      "salaryAmount": 4.56,
+      "status": "completed",
+      "id": "wuZ6WZKCFyE"
+>>>>>>> ca017987f5da68d6b817906a9c93ab5fdc8d1287
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
