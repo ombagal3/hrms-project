@@ -504,18 +504,18 @@ export default function Employee() {
             <tbody>
               {monthlyAttendance.map((item) => (
                 <tr key={item.id}>
-                  <td>{item.date}</td>
-                  <td>{item.dayType === "paid-sunday" ? "Sunday Paid" : formatTime(item.checkInAt)}</td>
-                  <td>{item.dayType === "paid-sunday" ? "Sunday Paid" : formatTime(item.checkOutAt)}</td>
-                  <td>{item.workedHours || 0}</td>
-                  <td>{item.overtimeHours || 0}</td>
-                  <td>{item.dayType || item.status || "-"}</td>
-                  <td>Rs {item.salaryAmount || 0}</td>
+                  <td data-label="Date">{item.date}</td>
+                  <td data-label="Check In">{item.dayType === "paid-sunday" ? "Sunday Paid" : formatTime(item.checkInAt)}</td>
+                  <td data-label="Check Out">{item.dayType === "paid-sunday" ? "Sunday Paid" : formatTime(item.checkOutAt)}</td>
+                  <td data-label="Hours">{item.workedHours || 0}</td>
+                  <td data-label="Overtime">{item.overtimeHours || 0}</td>
+                  <td data-label="Type">{item.dayType || item.status || "-"}</td>
+                  <td data-label="Salary">Rs {item.salaryAmount || 0}</td>
                 </tr>
               ))}
               {monthlyAttendance.length === 0 && (
                 <tr>
-                  <td colSpan="7">No attendance found for selected month</td>
+                  <td className="table-empty-cell" colSpan="7">No attendance found for selected month</td>
                 </tr>
               )}
             </tbody>

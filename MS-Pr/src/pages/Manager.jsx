@@ -281,19 +281,19 @@ export default function Manager() {
               <tbody>
                 {teamLeaves.map((leave) => (
                   <tr key={leave.id}>
-                    <td>
+                    <td data-label="Employee">
                       <strong>{leave.name}</strong>
                       <span>{leave.email || leave.managerName || "-"}</span>
                     </td>
-                    <td>{leave.field || "-"}</td>
-                    <td>{leave.date || "-"}</td>
-                    <td>{leave.reason || "-"}</td>
-                    <td>
+                    <td data-label="Team">{leave.field || "-"}</td>
+                    <td data-label="Date">{leave.date || "-"}</td>
+                    <td data-label="Reason">{leave.reason || "-"}</td>
+                    <td data-label="Status">
                       <span className={getStatusClass(leave.status)}>
                         {leave.status}
                       </span>
                     </td>
-                    <td>
+                    <td data-label="Action">
                       {leave.status === "pending" ? (
                         <div className="approval-actions">
                           <button
@@ -318,7 +318,7 @@ export default function Manager() {
 
                 {teamLeaves.length === 0 && (
                   <tr>
-                    <td colSpan="6">
+                    <td className="table-empty-cell" colSpan="6">
                       <div className="empty-state table-empty">
                         <strong>No leave requests</strong>
                         <p>Team employee leave apply karega to yaha request aayegi.</p>

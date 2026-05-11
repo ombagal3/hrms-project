@@ -206,17 +206,17 @@ export default function Admin() {
             <tbody>
               {currentUsers.map((user) => (
                 <tr key={user.id}>
-                  <td>
+                  <td data-label="Employee">
                     <strong>{user.name}</strong>
                     <span>{user.email}</span>
                   </td>
-                  <td>{user.role}</td>
-                  <td>{user.field || "-"}</td>
-                  <td>{user.joinDate || "-"}</td>
-                  <td>{user.managerName || "-"}</td>
-                  <td>{user.monthlySalary ? `Rs ${user.monthlySalary}` : "-"}</td>
-                  <td>{user.phone || "-"}</td>
-                  <td>
+                  <td data-label="Role">{user.role}</td>
+                  <td data-label="Field">{user.field || "-"}</td>
+                  <td data-label="Join Date">{user.joinDate || "-"}</td>
+                  <td data-label="Manager">{user.managerName || "-"}</td>
+                  <td data-label="Monthly Salary">{user.monthlySalary ? `Rs ${user.monthlySalary}` : "-"}</td>
+                  <td data-label="Phone">{user.phone || "-"}</td>
+                  <td data-label="Action">
                     <button className="small-btn" onClick={() => handleEdit(user)}>
                       Edit
                     </button>

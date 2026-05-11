@@ -1,9 +1,9 @@
 export default function Layout({ children }) {
   return (
-    <div className="d-flex">
+    <div className="app-layout">
       
       {/* Sidebar */}
-      <div className="bg-dark text-white p-3" style={{ width: "200px", height: "100vh" }}>
+      <div className="app-sidebar bg-dark text-white p-3">
         <h4>HRMS</h4>
         <ul className="list-unstyled">
           <li>Dashboard</li>
