@@ -8,13 +8,17 @@ import {
 import { fetchLeaves, updateLeave } from "../features/leave/leaveSlice";
 import { fetchUsers } from "../features/users/userSlice";
 import {
+  calculateSalaryDeductions,
   calculateCheckoutPayroll,
   formatTime,
+  getAttendanceTotal,
   getLocalDateKey,
+  getMonthKey,
   getPayrollRates,
   normalHours,
   roundMoney
 } from "../utils/payroll";
+import LogoutButton from "../components/LogoutButton";
 
 const getInitials = (name = "") => {
   return name
@@ -42,6 +46,8 @@ export default function Manager() {
     []
   );
   const [now, setNow] = useState(new Date());
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState("");
+  const [salaryMonth, setSalaryMonth] = useState(getMonthKey());
 
   useEffect(() => {
     dispatch(fetchLeaves());
@@ -57,6 +63,17 @@ export default function Manager() {
   const teamEmployees = useMemo(() => {
     return users.filter((user) => user.managerId === manager?.id);
   }, [manager?.id, users]);
+
+  useEffect(() => {
+    if (!teamEmployees.length) {
+      setSelectedEmployeeId("");
+      return;
+    }
+
+    if (!teamEmployees.some((employee) => employee.id === selectedEmployeeId)) {
+      setSelectedEmployeeId(teamEmployees[0].id);
+    }
+  }, [selectedEmployeeId, teamEmployees]);
 
   const managerAttendance = useMemo(() => {
     return attendance.filter(
@@ -96,6 +113,46 @@ export default function Manager() {
   );
   const monthlySalary = Number(manager?.monthlySalary || manager?.salary || 0);
   const { dailySalary, hourlySalary } = getPayrollRates(monthlySalary);
+  const selectedEmployee = teamEmployees.find(
+    (employee) => employee.id === selectedEmployeeId
+  );
+  const selectedEmployeeSalary = Number(
+    selectedEmployee?.monthlySalary || selectedEmployee?.salary || 0
+  );
+  const selectedEmployeeRates = getPayrollRates(selectedEmployeeSalary);
+  const selectedEmployeeAttendance = attendance.filter(
+    (item) =>
+      (item.userId === selectedEmployee?.id ||
+        item.email === selectedEmployee?.email ||
+        item.name === selectedEmployee?.name) &&
+      item.status !== "paid-sunday" &&
+      item.dayType !== "paid-sunday" &&
+      String(item.date || "").startsWith(salaryMonth)
+  );
+  const selectedEmployeeLeaves = leaves.filter(
+    (leave) =>
+      leave.status === "approved" &&
+      (leave.userId === selectedEmployee?.id ||
+        leave.email === selectedEmployee?.email ||
+        leave.name === selectedEmployee?.name) &&
+      String(leave.date || "").startsWith(salaryMonth)
+  );
+  const selectedPaidLeaveDays = Math.min(1, selectedEmployeeLeaves.length);
+  const selectedUnpaidLeaveDays = Math.max(
+    0,
+    selectedEmployeeLeaves.length - selectedPaidLeaveDays
+  );
+  const selectedAttendanceSalary = getAttendanceTotal(selectedEmployeeAttendance);
+  const selectedPaidLeaveAmount = roundMoney(
+    selectedEmployeeRates.dailySalary * selectedPaidLeaveDays
+  );
+  const selectedLeaveDeduction = roundMoney(
+    selectedEmployeeRates.dailySalary * selectedUnpaidLeaveDays
+  );
+  const selectedSalarySummary = calculateSalaryDeductions(
+    roundMoney(selectedAttendanceSalary + selectedPaidLeaveAmount),
+    selectedLeaveDeduction
+  );
 
   const handleUpdate = (leave, status) => {
     dispatch(updateLeave({ ...leave, status }));
@@ -168,12 +225,15 @@ export default function Manager() {
             assigned team members from one place.
           </p>
         </div>
-        <div className="manager-profile">
-          <span>{getInitials(manager?.name || "MG")}</span>
-          <div>
-            <strong>{manager?.name || "Manager"}</strong>
-            <small>{manager?.email || "manager account"}</small>
+        <div className="manager-profile-wrap">
+          <div className="manager-profile">
+            <span>{getInitials(manager?.name || "MG")}</span>
+            <div>
+              <strong>{manager?.name || "Manager"}</strong>
+              <small>{manager?.email || "manager account"}</small>
+            </div>
           </div>
+          <LogoutButton />
         </div>
       </section>
 
@@ -238,14 +298,20 @@ export default function Manager() {
 
           <div className="member-list">
             {teamEmployees.map((employee) => (
-              <div className="member-card" key={employee.id}>
+              <button
+                className={`member-card member-card-button ${
+                  selectedEmployeeId === employee.id ? "selected" : ""
+                }`}
+                key={employee.id}
+                onClick={() => setSelectedEmployeeId(employee.id)}
+              >
                 <span className="avatar">{getInitials(employee.name)}</span>
                 <div>
                   <strong>{employee.name}</strong>
                   <small>{employee.field || "Team member"}</small>
                 </div>
                 <p>Rs {employee.monthlySalary || 0}</p>
-              </div>
+              </button>
             ))}
 
             {teamEmployees.length === 0 && (
@@ -258,6 +324,97 @@ export default function Manager() {
         </div>
 
         <div className="manager-panel wide">
+          <div className="manager-panel-head">
+            <div>
+              <h3>Employee Salary Detail</h3>
+              <p>Click team member and view selected month salary</p>
+            </div>
+            <input
+              className="month-picker"
+              type="month"
+              value={salaryMonth}
+              onChange={(e) => setSalaryMonth(e.target.value)}
+            />
+          </div>
+
+          {selectedEmployee ? (
+            <div className="salary-detail-box">
+              <div className="salary-employee-head">
+                <span className="avatar">{getInitials(selectedEmployee.name)}</span>
+                <div>
+                  <strong>{selectedEmployee.name}</strong>
+                  <small>{selectedEmployee.email || "-"}</small>
+                </div>
+              </div>
+
+              <div className="salary-detail-grid">
+                <div>
+                  <span>Aadhaar</span>
+                  <strong>{selectedEmployee.aadhaar || "-"}</strong>
+                </div>
+                <div>
+                  <span>Phone</span>
+                  <strong>{selectedEmployee.phone || "-"}</strong>
+                </div>
+                <div>
+                  <span>Join Date</span>
+                  <strong>{selectedEmployee.joinDate || "-"}</strong>
+                </div>
+                <div>
+                  <span>Monthly Salary</span>
+                  <strong>Rs {selectedEmployeeSalary}</strong>
+                </div>
+                <div>
+                  <span>Daily Salary</span>
+                  <strong>Rs {roundMoney(selectedEmployeeRates.dailySalary)}</strong>
+                </div>
+                <div>
+                  <span>Worked Days</span>
+                  <strong>{selectedEmployeeAttendance.length}</strong>
+                </div>
+                <div>
+                  <span>Attendance Pay</span>
+                  <strong>Rs {selectedAttendanceSalary}</strong>
+                </div>
+                <div>
+                  <span>Paid Leave</span>
+                  <strong>{selectedPaidLeaveDays}</strong>
+                </div>
+                <div>
+                  <span>Unpaid Leave</span>
+                  <strong>{selectedUnpaidLeaveDays}</strong>
+                </div>
+                <div>
+                  <span>Gross Pay</span>
+                  <strong>Rs {selectedSalarySummary.grossSalary}</strong>
+                </div>
+                <div>
+                  <span>Leave Cut</span>
+                  <strong>Rs {selectedSalarySummary.otherDeduction}</strong>
+                </div>
+                <div>
+                  <span>Tax Cut</span>
+                  <strong>Rs {selectedSalarySummary.taxDeduction}</strong>
+                </div>
+                <div>
+                  <span>PF Cut</span>
+                  <strong>Rs {selectedSalarySummary.pfDeduction}</strong>
+                </div>
+                <div className="net-pay-card">
+                  <span>Net Pay</span>
+                  <strong>Rs {selectedSalarySummary.netSalary}</strong>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="empty-state">
+              <strong>No employee selected</strong>
+              <p>Team member add hoga to salary detail yaha dikhegi.</p>
+            </div>
+          )}
+        </div>
+
+        <div className="manager-panel wide leave-requests-panel">
           <div className="manager-panel-head">
             <div>
               <h3>Leave Requests</h3>

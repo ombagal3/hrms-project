@@ -28,17 +28,28 @@ export default function Login() {
 
   return (
     <div className="login-page">
-      <div className="bubble-layer" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
+      <div className="tech-layer" aria-hidden="true">
+        <div className="tech-screen">
+          <span className="screen-line wide" />
+          <span className="screen-line" />
+          <span className="screen-line short" />
+          <span className="screen-dot dot-a" />
+          <span className="screen-dot dot-b" />
+        </div>
+        <div className="tech-keyboard">
+          {Array.from({ length: 18 }).map((_, index) => (
+            <span key={index} />
+          ))}
+        </div>
+        <div className="tech-mouse" />
+        <div className="tech-chip">
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+        <div className="circuit-line circuit-one" />
+        <div className="circuit-line circuit-two" />
       </div>
 
       <div className="login-card">

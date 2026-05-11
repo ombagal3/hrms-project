@@ -6,6 +6,7 @@ import {
   fetchUsers,
   updateUser
 } from "../features/users/userSlice";
+import LogoutButton from "../components/LogoutButton";
 import PasswordInput from "../components/PasswordInput";
 import { getRoleFromEmail } from "../utils/roleHelper";
 import { getLocalDateKey } from "../utils/payroll";
@@ -178,15 +179,18 @@ export default function Admin() {
             <h2>Employee List</h2>
             <p>Search, edit, or delete saved employee records</p>
           </div>
-          <input
-            className="search-box"
-            placeholder="Search employee..."
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setCurrentPage(1);
-            }}
-          />
+          <div className="heading-actions">
+            <input
+              className="search-box"
+              placeholder="Search employee..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
+            />
+            <LogoutButton />
+          </div>
         </div>
 
         <div className="table-wrap">
@@ -279,18 +283,24 @@ export default function Admin() {
             value={form.aadhaar}
             onChange={(e) => handleChange("aadhaar", e.target.value)}
           />
-          <input
-            type="date"
-            max={todayKey}
-            value={form.dob}
-            onChange={(e) => handleChange("dob", e.target.value)}
-          />
-          <input
-            type="date"
-            max={todayKey}
-            value={form.joinDate}
-            onChange={(e) => handleChange("joinDate", e.target.value)}
-          />
+          <label className="field-group">
+            <span>Birth Date</span>
+            <input
+              type="date"
+              max={todayKey}
+              value={form.dob}
+              onChange={(e) => handleChange("dob", e.target.value)}
+            />
+          </label>
+          <label className="field-group">
+            <span>Join Date</span>
+            <input
+              type="date"
+              max={todayKey}
+              value={form.joinDate}
+              onChange={(e) => handleChange("joinDate", e.target.value)}
+            />
+          </label>
           <input
             placeholder="Field / Department"
             value={form.field}

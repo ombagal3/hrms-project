@@ -7,6 +7,7 @@ import {
 } from "../features/attendance/attendanceSlice";
 import { applyLeave, fetchLeaves } from "../features/leave/leaveSlice";
 import { fetchUsers } from "../features/users/userSlice";
+import LogoutButton from "../components/LogoutButton";
 import {
   calculateSalaryDeductions,
   calculateCheckoutPayroll,
@@ -322,7 +323,10 @@ export default function Employee() {
             <h2>Employee Dashboard</h2>
             <p>{user.name} salary and attendance</p>
           </div>
-          <span className="clock">{now.toLocaleTimeString()}</span>
+          <div className="heading-actions">
+            <span className="clock">{now.toLocaleTimeString()}</span>
+            <LogoutButton />
+          </div>
         </div>
 
         <div className="stat-grid">
