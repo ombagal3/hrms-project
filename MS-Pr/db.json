@@ -33,7 +33,7 @@
       "id": "2y9pzFzZZ9s"
     },
     {
-      "name": "Om Bagal",
+      "name": "Om Bagall",
       "email": "empom@gmail.com",
       "password": "Om@12345",
       "aadhaar": "567890874",
@@ -113,36 +113,20 @@
       "id": "emp_mehul_2025"
     },
     {
-      "name": "Sneha Joshi",
-      "email": "empsneha@gmail.com",
-      "password": "Sneha@123",
-      "aadhaar": "654321987045",
-      "dob": "1998-07-25",
-      "joinDate": "2025-05-01",
-      "field": "Graphic Designer",
-      "managerId": "d2IJ1XkC_jM",
-      "monthlySalary": 55000,
-      "address": "City Light, Surat",
-      "phone": "9876598877",
-      "role": "employee",
-      "managerName": "Vishal More",
-      "id": "emp_sneha_2025"
-    },
-    {
-      "name": "prince",
-      "email": "empprince@gmail.com",
+      "name": "Prince ",
+      "email": "emprince@gmail.com",
       "password": "Prince@123",
-      "aadhaar": "100000455",
-      "dob": "2008-05-05",
-      "joinDate": "2026-05-11",
-      "field": "Full Stack dev",
+      "aadhaar": "100000001",
+      "dob": "2007-02-10",
+      "joinDate": "2026-05-12",
+      "field": "Full Stack Dev",
       "managerId": "2y9pzFzZZ9s",
-      "monthlySalary": 25000,
-      "address": "BHESTAN CHAR RASTA NEAR RANCHOD RAY MANDIR JANKI PARK SOCIETY G82",
+      "monthlySalary": 250000,
+      "address": "http://localhost:5173/",
       "phone": "7878033136",
       "role": "employee",
       "managerName": "Darshan Pawar",
-      "id": "sQWZ44fsX_o"
+      "id": "OznPEu4xiQU"
     }
   ],
   "leaves": [
@@ -183,7 +167,7 @@
       "id": "leave_mehul_20260506"
     },
     {
-      "userId": "emp_sneha_2025",
+      "userId": null,
       "name": "Sneha Joshi",
       "email": "empsneha@gmail.com",
       "field": "Graphic Designer",
@@ -285,8 +269,20 @@
       "managerName": "Darshan Pawar",
       "date": "2026-05-11",
       "reason": "out of city",
-      "status": "pending",
+      "status": "approved",
       "id": "3qR6cH4qWxE"
+    },
+    {
+      "userId": "emp_mehul_2025",
+      "name": "Mehul Desai",
+      "email": "empmehul@gmail.com",
+      "field": "UI Designer",
+      "managerId": "d2IJ1XkC_jM",
+      "managerName": "Vishal More",
+      "date": "2026-05-12",
+      "reason": "Out Of City",
+      "status": "pending",
+      "id": "fWq4Hdh-n7Q"
     }
   ],
   "attendance": [
@@ -538,7 +534,7 @@
       "id": "att_mehul_20260504"
     },
     {
-      "userId": "emp_sneha_2025",
+      "userId": null,
       "name": "Sneha Joshi",
       "email": "empsneha@gmail.com",
       "date": "2026-04-28",
@@ -557,7 +553,7 @@
       "id": "att_sneha_20260428"
     },
     {
-      "userId": "emp_sneha_2025",
+      "userId": null,
       "name": "Sneha Joshi",
       "email": "empsneha@gmail.com",
       "date": "2026-05-02",
@@ -594,7 +590,7 @@
       "id": "wuZ6WZKCFyE"
     },
     {
-      "userId": "sQWZ44fsX_o",
+      "userId": null,
       "name": "prince",
       "email": "empprince@gmail.com",
       "date": "2026-05-11",
@@ -628,6 +624,44 @@
       "salaryAmount": 90.84,
       "status": "completed",
       "id": "0SCZ7dp_yX8",
+      "dayType": "workday"
+    },
+    {
+      "userId": "2y9pzFzZZ9s",
+      "name": "Darshan Pawar",
+      "email": "mgrdarshan@gmail.com",
+      "date": "2026-05-12",
+      "checkIn": "6:09:31 PM",
+      "checkInAt": "2026-05-12T12:39:31.814Z",
+      "checkOut": "6:09:58 PM",
+      "checkOutAt": "2026-05-12T12:39:58.511Z",
+      "normalHours": 8,
+      "monthlySalary": 300000,
+      "hourlySalary": 1442.3076923076924,
+      "workedHours": 0.01,
+      "overtimeHours": 0,
+      "salaryAmount": 10.7,
+      "status": "completed",
+      "id": "8G8ruQSDuH0",
+      "dayType": "workday"
+    },
+    {
+      "userId": "emp_mehul_2025",
+      "name": "Mehul Desai",
+      "email": "empmehul@gmail.com",
+      "date": "2026-05-12",
+      "checkIn": "6:10:40 PM",
+      "checkInAt": "2026-05-12T12:40:40.154Z",
+      "checkOut": "6:10:52 PM",
+      "checkOutAt": "2026-05-12T12:40:52.909Z",
+      "normalHours": 8,
+      "monthlySalary": 48000,
+      "hourlySalary": 230.76923076923077,
+      "workedHours": 0,
+      "overtimeHours": 0,
+      "salaryAmount": 0.82,
+      "status": "completed",
+      "id": "iXcaB_TFK7E",
       "dayType": "workday"
     }
   ],
