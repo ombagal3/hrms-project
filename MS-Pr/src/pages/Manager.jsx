@@ -36,6 +36,9 @@ const getStatusClass = (status) => {
   return "status-badge pending";
 };
 
+const isCheckoutIncomplete = (item) =>
+  item?.status === "checked-in" && !item?.checkOutAt;
+
 export default function Manager() {
   const dispatch = useDispatch();
   const leaves = useSelector((state) => state.leave.list);
@@ -63,17 +66,6 @@ export default function Manager() {
   const teamEmployees = useMemo(() => {
     return users.filter((user) => user.managerId === manager?.id);
   }, [manager?.id, users]);
-
-  useEffect(() => {
-    if (!teamEmployees.length) {
-      setSelectedEmployeeId("");
-      return;
-    }
-
-    if (!teamEmployees.some((employee) => employee.id === selectedEmployeeId)) {
-      setSelectedEmployeeId(teamEmployees[0].id);
-    }
-  }, [selectedEmployeeId, teamEmployees]);
 
   const managerAttendance = useMemo(() => {
     return attendance.filter(
@@ -113,8 +105,13 @@ export default function Manager() {
   );
   const monthlySalary = Number(manager?.monthlySalary || manager?.salary || 0);
   const { dailySalary, hourlySalary } = getPayrollRates(monthlySalary);
-  const selectedEmployee = teamEmployees.find(
+  const effectiveSelectedEmployeeId = teamEmployees.some(
     (employee) => employee.id === selectedEmployeeId
+  )
+    ? selectedEmployeeId
+    : teamEmployees[0]?.id || "";
+  const selectedEmployee = teamEmployees.find(
+    (employee) => employee.id === effectiveSelectedEmployeeId
   );
   const selectedEmployeeSalary = Number(
     selectedEmployee?.monthlySalary || selectedEmployee?.salary || 0
@@ -143,6 +140,9 @@ export default function Manager() {
     selectedEmployeeLeaves.length - selectedPaidLeaveDays
   );
   const selectedAttendanceSalary = getAttendanceTotal(selectedEmployeeAttendance);
+  const selectedWorkedDays = selectedEmployeeAttendance.filter(
+    (item) => item.status === "completed"
+  ).length;
   const selectedPaidLeaveAmount = roundMoney(
     selectedEmployeeRates.dailySalary * selectedPaidLeaveDays
   );
@@ -257,7 +257,14 @@ export default function Manager() {
           </button>
           <div>
             <span>In: {todayAttendance?.dayType === "paid-sunday" ? "Sunday Paid" : formatTime(todayAttendance?.checkInAt)}</span>
-            <span>Out: {todayAttendance?.dayType === "paid-sunday" ? "Sunday Paid" : formatTime(todayAttendance?.checkOutAt)}</span>
+            <span>
+              Out:{" "}
+              {todayAttendance?.dayType === "paid-sunday"
+                ? "Sunday Paid"
+                : isCheckoutIncomplete(todayAttendance)
+                ? "Checkout incomplete"
+                : formatTime(todayAttendance?.checkOutAt)}
+            </span>
             <strong>Rs {todayAttendance?.salaryAmount || 0}</strong>
           </div>
         </div>
@@ -300,7 +307,7 @@ export default function Manager() {
             {teamEmployees.map((employee) => (
               <button
                 className={`member-card member-card-button ${
-                  selectedEmployeeId === employee.id ? "selected" : ""
+                  effectiveSelectedEmployeeId === employee.id ? "selected" : ""
                 }`}
                 key={employee.id}
                 onClick={() => setSelectedEmployeeId(employee.id)}
@@ -370,7 +377,7 @@ export default function Manager() {
                 </div>
                 <div>
                   <span>Worked Days</span>
-                  <strong>{selectedEmployeeAttendance.length}</strong>
+                  <strong>{selectedWorkedDays}</strong>
                 </div>
                 <div>
                   <span>Attendance Pay</span>

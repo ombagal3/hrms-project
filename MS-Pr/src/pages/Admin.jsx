@@ -50,12 +50,15 @@ export default function Admin() {
     });
   }, [search, users]);
 
-  const currentUsers = filteredUsers.slice(
+  const employeeUsers = filteredUsers.filter((user) => user.role === "employee");
+  const managerUsers = filteredUsers.filter((user) => user.role === "manager");
+
+  const currentEmployees = employeeUsers.slice(
     (currentPage - 1) * usersPerPage,
     currentPage * usersPerPage
   );
 
-  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const totalPages = Math.ceil(employeeUsers.length / usersPerPage);
   const managerOptions = users.filter((user) => user.role === "manager");
   const todayKey = getLocalDateKey();
 
@@ -208,7 +211,7 @@ export default function Admin() {
               </tr>
             </thead>
             <tbody>
-              {currentUsers.map((user) => (
+              {currentEmployees.map((user) => (
                 <tr key={user.id}>
                   <td data-label="Employee">
                     <strong>{user.name}</strong>
@@ -233,6 +236,13 @@ export default function Admin() {
                   </td>
                 </tr>
               ))}
+              {currentEmployees.length === 0 && (
+                <tr>
+                  <td className="table-empty-cell" colSpan="8">
+                    No employees found
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -250,6 +260,67 @@ export default function Admin() {
             ))}
           </div>
         )}
+      </section>
+
+      <section className="panel">
+        <div className="section-heading">
+          <div>
+            <h2>Manager List</h2>
+            <p>Search, edit, or delete saved manager records</p>
+          </div>
+          <span className="count-pill">{managerUsers.length} managers</span>
+        </div>
+
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Field</th>
+                <th>Join Date</th>
+                <th>Monthly Salary</th>
+                <th>Phone</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {managerUsers.map((user) => (
+                <tr key={user.id}>
+                  <td data-label="Manager">
+                    <strong>{user.name}</strong>
+                    <span>{user.email}</span>
+                  </td>
+                  <td data-label="Role">{user.role}</td>
+                  <td data-label="Field">{user.field || "-"}</td>
+                  <td data-label="Join Date">{user.joinDate || "-"}</td>
+                  <td data-label="Monthly Salary">
+                    {user.monthlySalary ? `Rs ${user.monthlySalary}` : "-"}
+                  </td>
+                  <td data-label="Phone">{user.phone || "-"}</td>
+                  <td data-label="Action">
+                    <button className="small-btn" onClick={() => handleEdit(user)}>
+                      Edit
+                    </button>
+                    <button
+                      className="danger-btn"
+                      onClick={() => dispatch(deleteUser(user.id))}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {managerUsers.length === 0 && (
+                <tr>
+                  <td className="table-empty-cell" colSpan="7">
+                    No managers found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section className="panel">

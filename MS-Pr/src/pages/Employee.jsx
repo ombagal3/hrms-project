@@ -38,6 +38,9 @@ const cleanPdfFileName = (value) =>
     .replace(/^-+|-+$/g, "")
     .toLowerCase();
 
+const isCheckoutIncomplete = (item) =>
+  item?.status === "checked-in" && !item?.checkOutAt;
+
 const downloadBlob = (blob, fileName) => {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -458,8 +461,12 @@ export default function Employee() {
     const attendanceRows = monthlyAttendance.map((item) => [
       item.date,
       item.dayType === "paid-sunday" ? "Sunday Paid" : formatTime(item.checkInAt),
-      item.dayType === "paid-sunday" ? "Sunday Paid" : formatTime(item.checkOutAt),
-      item.workedHours || 0,
+      item.dayType === "paid-sunday"
+        ? "Sunday Paid"
+        : isCheckoutIncomplete(item)
+        ? "Checkout incomplete"
+        : formatTime(item.checkOutAt),
+      isCheckoutIncomplete(item) ? "Checkout incomplete" : item.workedHours || 0,
       item.dayType || item.status || "-",
       `Rs ${item.salaryAmount || 0}`
     ]);
@@ -585,11 +592,19 @@ export default function Employee() {
               </div>
               <div>
                 <span>Check Out</span>
-                <strong>{formatTime(todayAttendance?.checkOutAt)}</strong>
+                <strong>
+                  {isCheckoutIncomplete(todayAttendance)
+                    ? "Checkout incomplete"
+                    : formatTime(todayAttendance?.checkOutAt)}
+                </strong>
               </div>
               <div>
                 <span>Worked Hours</span>
-                <strong>{todayAttendance?.workedHours || 0} hr</strong>
+                <strong>
+                  {isCheckoutIncomplete(todayAttendance)
+                    ? "Checkout incomplete"
+                    : `${todayAttendance?.workedHours || 0} hr`}
+                </strong>
               </div>
               <div>
                 <span>Overtime</span>
@@ -686,8 +701,18 @@ export default function Employee() {
                 <tr key={item.id}>
                   <td data-label="Date">{item.date}</td>
                   <td data-label="Check In">{item.dayType === "paid-sunday" ? "Sunday Paid" : formatTime(item.checkInAt)}</td>
-                  <td data-label="Check Out">{item.dayType === "paid-sunday" ? "Sunday Paid" : formatTime(item.checkOutAt)}</td>
-                  <td data-label="Hours">{item.workedHours || 0}</td>
+                  <td data-label="Check Out">
+                    {item.dayType === "paid-sunday"
+                      ? "Sunday Paid"
+                      : isCheckoutIncomplete(item)
+                      ? "Checkout incomplete"
+                      : formatTime(item.checkOutAt)}
+                  </td>
+                  <td data-label="Hours">
+                    {isCheckoutIncomplete(item)
+                      ? "Checkout incomplete"
+                      : item.workedHours || 0}
+                  </td>
                   <td data-label="Overtime">{item.overtimeHours || 0}</td>
                   <td data-label="Type">{item.dayType || item.status || "-"}</td>
                   <td data-label="Salary">Rs {item.salaryAmount || 0}</td>
